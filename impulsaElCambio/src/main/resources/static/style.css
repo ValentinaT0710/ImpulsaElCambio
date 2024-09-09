@@ -1,0 +1,93 @@
+body {
+    background-image: url("Imagenes/fondopage1.jpg");
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    background-position: center;
+    background-attachment: fixed;
+}
+
+header {
+    position: relative;
+    z-index: 1;
+}
+
+.header-container {
+    background-color: #fff;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+}
+
+.logo {
+    width: 100px;
+    height: auto;
+}
+
+.titulo {
+    font-size: 80px;
+    color: #2ecc71;
+    margin-left: 20px;
+}
+
+nav {
+    background-color: #ffeb3b;
+    height: 2cm;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.nav-link {
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+    padding: 8px 12px;
+    margin: 0 10px;
+    border-radius: 5px;
+    font-size: 20px;
+}
+
+.nav-link:hover {
+    background-color: #e11111;
+    color: #fff;
+}
+
+.bienvenida {
+    padding: 40px;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+}
+
+.bienvenida-titulo {
+    font-size: 50px;
+    color: red;
+    text-shadow: 2px 2px 4px black;
+    margin-bottom: 20px;
+}
+
+.bienvenida-texto {
+    font-size: 20px;
+    line-height: 1.5;
+    color: #000;
+    background-color: rgba(46, 204, 113, 0.3);
+    padding: 20px;
+    border-radius: 10px;
+    width: fit-content;
+    margin: 0 auto;
+}
+
+.boton {
+    border: none;
+    color: black;
+    padding: 14px 28px;
+    cursor: pointer;
+    border-radius: 5px;
+    background-image: linear-gradient(to right, #e6d876, #3ee111, #e11111);
+    display: block;
+    margin: 20px auto;
+}
+
+
+
