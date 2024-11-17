@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Impulsa el cambio - Voluntario</title>
+    <link rel="stylesheet" type="text/css" href="/inicioVoluntario.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Limelight&family=Literata:ital,opsz,wght@0,7..72,200..900;1,7..72,200..900&family=Luckiest+Guy&family=Lusitana:wght@400;700&family=Mitr:wght@200;300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <header class="header">
+      <div class="logo">
+        <img src="/Imagenes/Logo.png" alt="Logo" class="Logo" />
+      </div>
+      <h1 class="IMPULSA-EL-CAMBIO">IMPULSA EL CAMBIO</h1>
+      <button class="menu-mobile" id="menuButton" aria-label="Menu">
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+      </button>
+    </header>
+    <div class="overlay"></div>
+    <nav>
+      <ul class="menu-horizontal">
+        <li>
+          <a href="/inicioVoluntario"
+            >Inicio <i class="fas fa-home" style="color: #ebff3b"></i
+          ></a>
+        </li>
+        <li>
+          <a href="#"
+            >Proyectos
+            <i class="fas fa-project-diagram" style="color: #3bff45"></i
+            ><i class="fas fa-caret-down"></i></a>
+        </li>
+          <ul class="menu-vertical">
+            <li>
+              <a href="/proyectos"
+                >Ver Proyectos
+                <i class="fas fa-list-ul" style="color: #3bff45"></i
+              ></a>
+            </li>
+            <li>
+              <a href="/DesafioVoluntario"
+                >Desafíos <i class="fas fa-trophy" style="color: #3bff45"></i
+              ></a>
+            </li>
+          </ul>
+        </li>
+        <li>
+          <a href="#"
+            >Comunidad <i class="fas fa-users" style="color: #3b58ff"></i>
+            <i class="fas fa-caret-down"></i
+          ></a>
+          <ul class="menu-vertical">
+            <li>
+              <a href="/foro"
+                >Foro <i class="fas fa-comments" style="color: #3b58ff"></i
+              ></a>
+            </li>
+          </ul>
+        </li>
+        <li>
+          <a href="#"
+            >Mi Cuenta <i class="fas fa-user" style="color: #ff3bd5"></i>
+            <i class="fas fa-caret-down"></i
+          ></a>
+          <ul class="menu-vertical">
+            <li>
+              <a href="/Perfil"
+                >Perfil <i class="fas fa-id-card" style="color: #ff3bd5"></i
+              ></a>
+            </li>
+            <li>
+              <a href="/cerrarSesion"
+                >Cerrar Sesión
+                <i class="fas fa-sign-out-alt" style="color: #ff3bd5"></i
+              ></a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+    <section class="inicio-usuario">
+      <h2>Bienvenido, <span th:text="${usuario.nombre}">Usuario</span></h2>
+
+      <!-- Sección de Desafíos -->
+      <div class="seccion-desafios">
+        <h3><i class="fas fa-trophy"></i> Desafíos Activos</h3>
+        <div class="tarjetas-grid">
+          <div
+            th:if="${not #lists.isEmpty(desafiosActivos)}"
+            class="tarjetas-container"
+          >
+            <a
+              th:each="desafio : ${desafiosActivos}"
+              href="/DesafioVoluntario"
+              class="tarjeta-desafio"
+            >
+              <div class="desafio-header">
+                <h4 th:text="${desafio.tipoDesafio.descripcion}">
+                  Tipo de Desafío
+                </h4>
+                <span
+                  class="puntos-recompensa"
+                  th:text="${'🏆 ' + desafio.puntosRecompensa + ' pts'}"
+                  >100 pts</span
+                >
+              </div>
+              <div class="desafio-footer">
+                <span
+                  class="fecha-limite"
+                  th:text="${'⏰ Fecha límite: ' + #temporals.format(desafio.fechaFin, 'dd/MM/yyyy')}"
+                >
+                  Fecha límite
+                </span>
+                <span
+                  class="estado-participando"
+                  th:if="${desafio.participantes.contains(usuario) and !desafio.usuariosCompletados.contains(usuario)}"
+                >
+                  🎯 En progreso
+                </span>
+                <span
+                  class="estado-completado"
+                  th:if="${desafio.usuariosCompletados.contains(usuario)}"
+                >
+                  ✅ Completado
+                </span>
+              </div>
+            </a>
+          </div>
+          <div th:if="${#lists.isEmpty(desafiosActivos)}" class="estado-vacio">
+            <p>No hay desafíos activos en este momento.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sección de Proyectos -->
+      <div class="seccion-proyectos">
+        <h3><i class="fas fa-project-diagram"></i> Proyectos Activos</h3>
+        <div class="tarjetas-grid">
+          <div
+            th:if="${not #lists.isEmpty(proyectosActivos)}"
+            class="tarjetas-container"
+          >
+            <a
+              th:each="proyecto : ${proyectosActivos}"
+              href="/proyectos"
+              class="tarjeta-proyecto"
+            >
+              <div class="proyecto-header">
+                <h4 th:text="${proyecto.nombre}">Nombre del Proyecto</h4>
+              </div>
+              <p class="proyecto-descripcion" th:text="${proyecto.descripcion}">
+                Descripción del Proyecto
+              </p>
+              <div class="proyecto-footer">
+                <span
+                  class="participantes"
+                  th:text="${'👥 Participantes: ' + proyecto.participantes.size()}"
+                >
+                  Participantes
+                </span>
+                <span
+                  class="fecha-creacion"
+                  th:if="${proyecto.fechaCreacion != null}"
+                  th:text="${'📅 Creado: ' + #temporals.format(proyecto.fechaCreacion, 'dd/MM/yyyy')}"
+                >
+                  Fecha de creación
+                </span>
+              </div>
+            </a>
+          </div>
+          <div th:if="${#lists.isEmpty(proyectosActivos)}" class="estado-vacio">
+            <p>No hay proyectos activos en este momento.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const menuButton = document.querySelector(".menu-mobile");
+        const nav = document.querySelector("nav");
+        const menuHorizontal = document.querySelector(".menu-horizontal");
+        const overlay = document.querySelector(".overlay");
+        const menuItems = document.querySelectorAll(".menu-horizontal > li");
+
+        menuButton.addEventListener("click", function () {
+          menuButton.classList.toggle("active");
+          nav.classList.toggle("active");
+          menuHorizontal.classList.toggle("active");
+          overlay.classList.toggle("active");
+          document.body.classList.toggle("no-scroll");
+        });
+
+        menuItems.forEach((item) => {
+          const link = item.querySelector("a");
+          const submenu = item.querySelector(".menu-vertical");
+
+          if (submenu) {
+            link.addEventListener("click", function (e) {
+              if (window.innerWidth <= 768) {
+                e.preventDefault();
+                menuItems.forEach((otherItem) => {
+                  if (otherItem !== item) {
+                    otherItem.classList.remove("active");
+                  }
+                });
+                item.classList.toggle("active");
+              }
+            });
+          }
+        });
+
+        overlay.addEventListener("click", function () {
+          menuButton.classList.remove("active");
+          nav.classList.remove("active");
+          menuHorizontal.classList.remove("active");
+          overlay.classList.remove("active");
+          document.body.classList.remove("no-scroll");
+          menuItems.forEach((item) => item.classList.remove("active"));
+        });
+      });
+      const menuMobile = document.querySelector(".menu-mobile");
+      const menuHorizontal = document.querySelector(".menu-horizontal");
+      const closeBtn = document.querySelector(".close-btn");
+
+      menuMobile.addEventListener("click", () => {
+        menuHorizontal.classList.add("active");
+      });
+
+      closeBtn.addEventListener("click", () => {
+        menuHorizontal.classList.remove("active");
+      });
+
+      function participarEnDesafio(desafioId) {
+        fetch("/participarDesafio", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ desafioId: desafioId }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.success) {
+              // Recargar la página para mostrar el estado actualizado
+              location.reload();
+            } else {
+              alert(data.message || "Error al participar en el desafío");
+            }
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+            alert("Error al participar en el desafío");
+          });
+      }
+    </script>
+  </body>
+</html>

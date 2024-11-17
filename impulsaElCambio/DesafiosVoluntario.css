@@ -1,0 +1,270 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Limelight", "Literata", sans-serif;
+  background: linear-gradient(135deg, #fff, #c8a2c8 100%);
+  overflow-x: hidden;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 5px;
+  background-color: white;
+  gap: 20px;
+}
+
+.logo img {
+  width: 400px;
+  max-height: 300px;
+  margin-right: 10px;
+}
+
+.IMPULSA-EL-CAMBIO {
+  font-size: 85px;
+  color: #03b7bce6;
+  -webkit-text-stroke: 0.5px #ffffff;
+  text-shadow: 0 4px 6px #03b7bce6;
+  margin: 5px 0;
+  font-family: "Limelight", "Literata", sans-serif;
+  margin: 0;
+  font-weight: normal;
+}
+
+/* Estilos del menú */
+.main-nav {
+  width: 100%;
+  background-color: #cb73fa;
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+.menu-horizontal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  flex-wrap: wrap;
+}
+
+.menu-horizontal > li {
+  position: relative;
+  margin: 0;
+  padding: 0;
+}
+
+.menu-horizontal > li > a {
+  display: flex;
+  align-items: center;
+  padding: 16px 32px;
+  color: #000;
+  text-decoration: none;
+  font-size: 24px;
+  font-weight: bold;
+  font-family: "Literata", serif;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  display: block;
+  border: none;
+}
+
+.menu-horizontal > li > a:hover {
+  background-color: #45b5c9;
+  color: white;
+  transform: scale(1.05);
+}
+
+.menu-horizontal > li > a > i {
+  margin-right: 10px;
+}
+
+/* Estilos del botón móvil */
+.menu-mobile {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+}
+
+.menu-mobile .bar {
+  display: block;
+  width: 25px;
+  height: 3px;
+  margin: 5px auto;
+  background-color: #03b7bce6;
+  transition: all 0.3s ease-in-out;
+}
+
+main {
+  flex: 1;
+  padding: 2rem 1rem;
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+  box-sizing: border-box;
+  border: none;
+  font-family: Literata;
+}
+
+.header h1 {
+  margin: 0;
+}
+
+.container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.desafios-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+  padding: 15px;
+}
+
+.desafio-card {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  padding: 15px;
+  transition: transform 0.3s ease;
+}
+
+.desafio-card:hover {
+  transform: translateY(-5px);
+}
+
+.desafio-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.desafio-header h2 {
+  font-size: 1.2rem;
+  margin: 0;
+}
+
+.puntos {
+  background: #4caf50;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 15px;
+  font-size: 0.9rem;
+}
+
+.desafio-content {
+  margin-bottom: 15px;
+}
+
+.desafio-info {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-size: 0.9rem;
+}
+
+.fecha {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.desafio-actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.btn-participar,
+.btn-completar {
+  padding: 8px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.btn-participar {
+  background-color: #2196f3;
+  color: white;
+}
+
+.btn-completar {
+  background-color: #4caf50;
+  color: white;
+}
+
+.completado {
+  color: #4caf50;
+  font-weight: bold;
+}
+
+@media screen and (max-width: 768px) {
+  .desafios-grid {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    padding: 10px;
+  }
+  .desafio-card {
+    padding: 12px;
+  }
+  .desafio-header h2 {
+    font-size: 1.1rem;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .container {
+    padding: 10px;
+  }
+  .desafios-grid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+  .desafio-header {
+    flex-direction: column;
+    text-align: center;
+    gap: 10px;
+  }
+  .puntos {
+    width: fit-content;
+    margin: 0 auto;
+  }
+  .fecha {
+    font-size: 0.85rem;
+  }
+  .btn-participar,
+  .btn-completar {
+    width: 100%;
+    padding: 10px;
+  }
+}
+
+main,
+header,
+footer {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1;
+}
+
+html,
+body {
+  overflow-x: hidden;
+}
+

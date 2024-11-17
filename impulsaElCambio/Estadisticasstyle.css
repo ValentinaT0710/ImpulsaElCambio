@@ -1,0 +1,522 @@
+/* Variables globales */
+
+:root {
+    --primary-color: #8e44ad;
+    --secondary-color: #9b59b6;
+    --text-color: #333;
+    --white: #ffffff;
+    --shadow-color: rgba(0, 0, 0, 0.1);
+    --header-color: rgba(3, 183, 188, 0.9);
+    --font-primary: 'Mitr', sans-serif;
+    --font-secondary: 'Limelight', 'Literata', sans-serif;
+}
+
+
+/* Estilos generales */
+
+body {
+    background-size: 400% 400%;
+    animation: gradientAnimation 12s ease infinite;
+    font-family: 'Mitr', sans-serif;
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
+    font-family: 'Limelight', 'Literata', sans-serif;
+    background: linear-gradient(200deg, #f3f3f3, #dbacee, #db80f1);
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    overflow-x: hidden;
+    width: 100%;
+    min-width: 320px;
+}
+
+@keyframes gradientAnimation {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px;
+    background-color: white;
+    gap: 20px;
+    width: 100%;
+    flex-wrap: wrap;
+}
+
+.logo img {
+    width: 200px;
+    max-height: 100px;
+}
+
+.IMPULSA-EL-CAMBIO {
+    font-size: 100px;
+    color: rgba(3, 183, 188, 0.9);
+    text-shadow: 0 4px 6px #03b7bc;
+    white-space: nowrap;
+    margin: 0;
+    font-family: 'Limelight', 'Literata', sans-serif;
+}
+
+.menu-horizontal {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    background-color: #8e44ad;
+    padding: 0;
+    margin: 0;
+    position: center;
+    gap: 10px;
+}
+
+.menu-horizontal>li {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.menu-horizontal>li>a {
+    display: block;
+    padding: 15px 20px;
+    color: rgb(255, 255, 255);
+    text-decoration: none;
+    font-family: 'Mitr', sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+}
+
+
+/* Estilos para el menú desplegable */
+
+.menu-vertical {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: #9b59b6;
+    padding: 0;
+    list-style: none;
+    min-width: 180px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.menu-horizontal>li:hover .menu-vertical {
+    display: block;
+}
+
+.menu-vertical li {
+    width: 100%;
+}
+
+.menu-vertical li a {
+    display: block;
+    padding: 12px 20px;
+    color: white;
+    text-decoration: none;
+    font-family: 'Mitr', sans-serif;
+    font-weight: 300;
+    font-size: 14px;
+}
+
+
+/* Efectos hover */
+
+.menu-horizontal>li>a:hover,
+.menu-vertical li a:hover {
+    background-color: #8e44ad;
+}
+
+
+/* Estilo para el ícono de flecha */
+
+.fas.fa-caret-down {
+    margin-left: 5px;
+}
+
+
+/* Estilos del contenido principal */
+
+main {
+    padding: 2rem;
+    background-color: var(--background-color);
+    flex-grow: 1;
+}
+
+h2 {
+    color: var(--text-color);
+    font-family: var(--font-primary);
+    font-weight: 500;
+    font-size: 28px;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+
+/* Estilos de las estadísticas */
+
+.stats-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+
+.stat-card {
+    background-color: var(--white);
+    border-radius: 10px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 10px var(--shadow-color);
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 15px var(--shadow-color);
+}
+
+.stat-number {
+    color: var(--primary-color);
+    font-family: var(--font-primary);
+    font-weight: 500;
+    font-size: 32px;
+    margin-bottom: 0.5rem;
+}
+
+.stat-label {
+    color: #555;
+    font-family: var(--font-primary);
+    font-weight: 300;
+    font-size: 16px;
+}
+
+
+/* Estilos para el panel de control administrativo */
+
+.admin-panel {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.panel-section {
+    background-color: var(--white);
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.panel-section h4 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    color: var(--primary-color);
+    font-family: var(--font-primary);
+    font-weight: 600;
+}
+
+.stat-group {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.stat-group p {
+    margin: 0;
+    font-family: var(--font-primary);
+    color: var(--text-color);
+}
+
+.stat-value {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+.panel-section .btn {
+    display: inline-block;
+    margin-top: 1rem;
+    padding: 10px 20px;
+    background-color: var(--primary-color);
+    color: var(--white);
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+    font-family: var(--font-primary);
+    font-weight: 400;
+}
+
+.panel-section .btn:hover {
+    background-color: var(--secondary-color);
+}
+
+.panel-section ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    text-align: left;
+}
+
+.panel-section ul li {
+    margin-bottom: 0.5rem;
+    padding-left: 20px;
+    position: relative;
+    font-family: var(--font-primary);
+    color: var(--text-color);
+}
+
+.panel-section ul li::before {
+    content: '•';
+    position: absolute;
+    left: 0;
+    color: var(--primary-color);
+}
+
+
+/* Estilos de la tabla */
+
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-top: 2rem;
+    background-color: var(--white);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 10px var(--shadow-color);
+}
+
+th,
+td {
+    font-family: var(--font-primary);
+    padding: 12px 15px;
+    text-align: left;
+}
+
+th {
+    background-color: var(--primary-color);
+    color: var(--white);
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+tr:nth-child(even) {
+    background-color: #f8f8f8;
+}
+
+tr:hover {
+    background-color: #f0f0f0;
+    transition: background-color 0.3s ease;
+}
+
+
+/* Estilos para las tarjetas de resumen */
+
+.summary-card {
+    background-color: var(--white);
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 4px 10px var(--shadow-color);
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.summary-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 15px var(--shadow-color);
+}
+
+.summary-title {
+    font-size: 1.2rem;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+    font-weight: 500;
+}
+
+.summary-content {
+    font-size: 1rem;
+    color: var(--text-color);
+    margin-bottom: 0.5rem;
+}
+
+.summary-link {
+    display: inline-block;
+    margin-top: 1rem;
+    color: var(--secondary-color);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.summary-link:hover {
+    color: var(--primary-color);
+}
+
+
+/* Grid para las tarjetas de resumen */
+
+.summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+
+/* Hamburger menu styles */
+
+.menu-mobile {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+    position: relative;
+    z-index: 1001;
+    margin-left: 10px;
+}
+
+.bar {
+    display: block;
+    width: 25px;
+    height: 3px;
+    margin: 5px auto;
+    background-color: #8e44ad;
+    transition: all 0.3s ease;
+}
+
+
+/* Overlay for mobile menu */
+
+.overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 998;
+}
+
+.overlay.active {
+    display: block;
+}
+
+
+/* Media queries for responsive design */
+
+@media screen and (max-width: 1024px) {
+    .IMPULSA-EL-CAMBIO {
+        font-size: 60px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .header {
+        padding: 10px;
+        flex-wrap: wrap;
+    }
+    .menu-mobile {
+        order: 1;
+        display: block;
+    }
+    .logo {
+        order: 2;
+    }
+    .IMPULSA-EL-CAMBIO {
+        order: 3;
+        width: 100%;
+        text-align: center;
+    }
+    .menu-horizontal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: -80%;
+        width: 80%;
+        max-width: 300px;
+        height: 100vh;
+        background-color: #8e44ad;
+        flex-direction: column;
+        padding-top: 60px;
+        transition: left 0.3s ease;
+        z-index: 999;
+        overflow-y: auto;
+    }
+    .menu-horizontal.active {
+        left: 0;
+        display: flex;
+    }
+    .menu-vertical {
+        position: static;
+        display: none;
+        background-color: rgba(155, 89, 182, 0.9);
+        width: 100%;
+        padding-left: 20px;
+    }
+    .menu-horizontal>li.active .menu-vertical {
+        display: block;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .header {
+        padding: 5px;
+    }
+    .IMPULSA-EL-CAMBIO {
+        font-size: 24px;
+    }
+    .logo img {
+        width: 80px;
+    }
+    main {
+        padding: 1rem;
+    }
+    .menu-horizontal {
+        width: 100%;
+    }
+}
+
+
+/* Para dispositivos muy pequeños */
+
+@media screen and (max-width: 320px) {
+    .IMPULSA-EL-CAMBIO {
+        font-size: 20px;
+    }
+    .logo img {
+        width: 60px;
+    }
+}
+
+
+/* Asegurar que el contenido no se desborde */
+
+* {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.menu-mobile,
+.menu-horizontal a {
+    min-height: 44px;
+    min-width: 44px;
+}

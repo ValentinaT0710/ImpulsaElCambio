@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Impulsa el cambio - Proyectos</title>
+    <link rel="stylesheet" href="/Proyectos.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Limelight&family=Literata:ital,opsz,wght@0,7..72,200..900;1,7..72,200..900&family=Luckiest+Guy&family=Lusitana:wght@400;700&family=Mitr:wght@200;300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <header class="header">
+      <div class="logo">
+        <img src="/Imagenes/Logo.png" alt="Logo" class="Logo" />
+      </div>
+      <h1 class="IMPULSA-EL-CAMBIO">IMPULSA EL CAMBIO</h1>
+      <button class="menu-mobile" id="menuButton" aria-label="Menu">
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+      </button>
+    </header>
+    <nav class="main-nav">
+      <ul class="menu-horizontal" id="mainMenu">
+        <li>
+          <a href="/inicioVoluntario">
+            <i class="fas fa-home" style="color: #ffd43b"></i> Inicio
+          </a>
+        </li>
+        <li>
+          <a href="/foro">
+            <i class="fas fa-comments" style="color: #69ff3b"></i> Foro
+          </a>
+        </li>
+        <li>
+          <a href="/proyectos">
+            <i class="fas fa-project-diagram" style="color: #558afd"></i>
+            Proyectos
+          </a>
+        </li>
+        <li>
+          <a href="/DesafioVoluntario">
+            <i class="fas fa-trophy" style="color: #ff3bad"></i> Desafíos
+          </a>
+        </li>
+        <li>
+          <a href="/Perfil">
+            <i class="fas fa-id-card" style="color: #ff3b45"></i> Perfil
+          </a>
+        </li>
+        <li>
+          <a href="/cerrarSesion">
+            <i class="fas fa-sign-out-alt" style="color: #3bffef"></i> Cerrar
+            Sesión
+          </a>
+        </li>
+      </ul>
+    </nav>
+    <main>
+      <h1>Proyectos</h1>
+      <section class="proyectos-activos">
+        <h2>Proyectos Activos</h2>
+        <div class="proyectos-grid">
+          <div th:each="proyecto : ${proyectosActivos}" class="Tarjeta">
+            <div class="Imagen">
+              <img th:src="${proyecto.imagenUrl}" alt="Imagen del proyecto" />
+            </div>
+            <div class="tarjeta-contenido">
+              <div class="proyectonombre" th:text="${proyecto.nombre}"></div>
+              <p
+                class="proyectodescripcion"
+                th:text="${proyecto.descripcion}"
+              ></p>
+              <p
+                class="proyectofechaExpiracion"
+                th:text="'Fecha de expiración: ' + ${#temporals.format(proyecto.fechaExpiracion, 'dd-MM-yyyy')}"
+              ></p>
+              <button class="boton-participar" th:data-id="${proyecto.id}">
+                PARTICIPAR
+              </button>
+              <button class="boton-eliminar" th:data-id="${proyecto.id}">
+                ELIMINAR PARTICIPACIÓN
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="proyectos-expirados">
+        <h2>Proyectos Expirados</h2>
+        <div class="proyectos-grid">
+          <div th:each="proyecto : ${proyectosExpirados}" class="Tarjeta">
+            <div class="Imagen">
+              <img th:src="${proyecto.imagenUrl}" alt="Imagen del proyecto" />
+            </div>
+            <div class="tarjeta-contenido">
+              <div class="proyectonombre" th:text="${proyecto.nombre}"></div>
+              <p
+                class="proyectodescripcion"
+                th:text="${proyecto.descripcion}"
+              ></p>
+              <p
+                class="proyectofecha"
+                th:text="'Fecha del proyecto: ' + ${#temporals.format(proyecto.fechaCreacion, 'dd-MM-yyyy')}"
+              ></p>
+              <button class="boton-expirado" disabled>Expirado</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div id="participarModal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Participar en el Proyecto</h2>
+        <form id="formParticipar">
+          <input type="hidden" id="proyectoId" name="proyectoId" />
+          <p>¿Estás seguro que deseas participar en este proyecto?</p>
+          <button type="submit">Confirmar Participación</button>
+        </form>
+      </div>
+    </div>
+
+    <div class="loader-overlay"></div>
+
+    <script>
+      $(document).ready(function () {
+        // Conexión WebSocket
+        let stompClient = null;
+
+        function conectarWebSocket() {
+          const socket = new SockJS("/ws-proyectos");
+          stompClient = Stomp.over(socket);
+          stompClient.connect(
+            {},
+            function (frame) {
+              console.log("Conectado a WebSocket");
+
+              // Suscribirse al topic de proyectos
+              stompClient.subscribe("/topic/proyectos", function (message) {
+                const data = JSON.parse(message.body);
+                actualizarProyectos(data);
+              });
+            },
+            function (error) {
+              console.log("Error en la conexión WebSocket:", error);
+              setTimeout(conectarWebSocket, 5000); // Reintentar conexión
+            }
+          );
+        }
+
+        function actualizarProyectos(data) {
+          // Verificar si la tarjeta ya existe
+          const tarjetaExistente = $(
+            `[data-proyecto-id="${data.proyecto.id}"]`
+          );
+
+          if (data.tipo === "NUEVO_PROYECTO") {
+            // Solo agregar si no existe
+            if (tarjetaExistente.length === 0) {
+              const tarjetaProyecto = crearTarjetaProyecto(data.proyecto);
+              $(".proyectos-activos .proyectos-grid").prepend(tarjetaProyecto);
+              inicializarBotones(
+                $(".proyectos-activos .proyectos-grid").find(".Tarjeta").first()
+              );
+              mostrarNotificacion("¡Nuevo proyecto disponible!", "success");
+            }
+          } else if (
+            data.tipo === "ACTUALIZAR_PARTICIPANTES" ||
+            data.tipo === "ACTUALIZAR_PROYECTO"
+          ) {
+            // Actualizar solo si existe
+            if (tarjetaExistente.length === 1) {
+              verificarImagen(data.proyecto.imagenUrl, () => {
+                const nuevaTarjeta = $(crearTarjetaProyecto(data.proyecto));
+                tarjetaExistente.replaceWith(nuevaTarjeta);
+                inicializarBotones(nuevaTarjeta);
+              });
+            }
+          } else if (data.tipo === "ELIMINAR_PROYECTO") {
+            // Eliminar proyecto
+            $(`[data-proyecto-id="${data.proyectoId}"]`).remove();
+          }
+        }
+
+        function verificarImagen(imagenUrl, callback) {
+          // Si no hay URL de imagen, usar imagen por defecto inmediatamente
+          if (!imagenUrl) {
+            callback();
+            return;
+          }
+
+          // Crear nueva imagen
+          const img = new Image();
+
+          // Configurar timeout más corto (1 segundo)
+          const timeoutId = setTimeout(() => {
+            img.src = "/imagenes/default-proyecto.jpg";
+            callback();
+          }, 1000);
+
+          // Al cargar la imagen
+          img.onload = function () {
+            clearTimeout(timeoutId);
+            if (img.complete && img.naturalWidth > 0) {
+              callback();
+            } else {
+              img.src = "/imagenes/default-proyecto.jpg";
+              callback();
+            }
+          };
+
+          // En caso de error
+          img.onerror = function () {
+            clearTimeout(timeoutId);
+            img.src = "/imagenes/default-proyecto.jpg";
+            callback();
+          };
+
+          // Forzar carga inmediata
+          img.src = imagenUrl;
+
+          // Precarga de imagen
+          if (typeof img.decode === "function") {
+            img.decode().catch(() => {
+              img.src = "/imagenes/default-proyecto.jpg";
+              callback();
+            });
+          }
+        }
+
+        function crearTarjetaProyecto(proyecto) {
+          const fechaExpiracion = new Date(
+            proyecto.fechaExpiracion
+          ).toLocaleDateString("es-ES");
+          const imagenUrl =
+            proyecto.imagenUrl || "/imagenes/default-proyecto.jpg";
+
+          return `
+                    <div class="Tarjeta" data-proyecto-id="${proyecto.id}">
+                        <div class="Imagen">
+                            <img src="${imagenUrl}"
+                                alt="Imagen del proyecto"
+                                onerror="this.src='/imagenes/default-proyecto.jpg'"
+                                loading="lazy">
+                        </div>
+                        <div class="tarjeta-contenido">
+                            <div class="proyectonombre">${proyecto.nombre}</div>
+                            <p class="proyectodescripcion">${proyecto.descripcion}</p>
+                            <p class="proyectofechaExpiracion">Fecha de expiración: ${fechaExpiracion}</p>
+                            <button class="boton-participar" data-id="${proyecto.id}">PARTICIPAR</button>
+                            <button class="boton-eliminar" data-id="${proyecto.id}">ELIMINAR PARTICIPACIÓN</button>
+                        </div>
+                    </div>
+                `;
+        }
+
+        function inicializarBotones(tarjeta) {
+          // Inicializar botón participar
+          tarjeta.find(".boton-participar").click(function () {
+            var proyectoId = $(this).data("id");
+            $("#proyectoId").val(proyectoId);
+            $("#participarModal").show();
+          });
+
+          // Inicializar botón eliminar
+          tarjeta.find(".boton-eliminar").click(function (e) {
+            e.preventDefault();
+            var proyectoId = $(this).data("id");
+
+            if (
+              confirm(
+                "¿Estás seguro de que quieres eliminar tu participación en este proyecto?"
+              )
+            ) {
+              mostrarLoader();
+              $.ajax({
+                url: "/proyectos/eliminar-participacion",
+                type: "POST",
+                data: JSON.stringify({
+                  proyectoId: proyectoId,
+                }),
+                contentType: "application/json",
+                dataType: "json",
+                success: function (response) {
+                  mostrarNotificacion("Participación eliminada correctamente");
+                },
+                error: function (xhr) {
+                  if (xhr.status >= 400) {
+                    const mensajeError = obtenerMensajeError(xhr.responseText);
+                    mostrarNotificacion(mensajeError, "error");
+                  }
+                },
+                complete: function () {
+                  ocultarLoader();
+                },
+              });
+            }
+          });
+        }
+
+        // Inicializar los botones para las tarjetas existentes al cargar la página
+        $(".Tarjeta").each(function () {
+          inicializarBotones($(this));
+        });
+
+        // Iniciar conexión WebSocket
+        conectarWebSocket();
+
+        function mostrarLoader() {
+          $(".loader-overlay").css("display", "flex");
+        }
+
+        function ocultarLoader() {
+          $(".loader-overlay").hide();
+        }
+
+        function mostrarNotificacion(mensaje, tipo = "success") {
+          const notificacion = $("<div>")
+            .addClass(`notificacion ${tipo}`)
+            .text(mensaje)
+            .appendTo("body");
+
+          setTimeout(() => {
+            notificacion.remove();
+          }, 3000);
+        }
+
+        $(".close").click(function () {
+          $("#participarModal").hide();
+        });
+
+        function obtenerMensajeError(responseText) {
+          if (responseText.includes("no participa en este proyecto")) {
+            return "No estás participando en este proyecto";
+          } else if (responseText.includes("proyecto no encontrado")) {
+            return "El proyecto no existe o ha sido eliminado";
+          } else if (responseText.includes("no autorizado")) {
+            return "No tienes permiso para realizar esta acción";
+          } else {
+            return "Hubo un problema al procesar tu solicitud";
+          }
+        }
+
+        $("#formParticipar").submit(function (e) {
+          e.preventDefault();
+          var proyectoId = $("#proyectoId").val();
+
+          mostrarLoader();
+
+          $.ajax({
+            url: "/proyectos/participar",
+            type: "POST",
+            data: {
+              proyectoId: proyectoId,
+            },
+            success: function (response) {
+              $("#participarModal").hide();
+              mostrarNotificacion("¡Te has unido al proyecto exitosamente!");
+              setTimeout(() => {
+                location.reload();
+              }, 1500);
+            },
+            error: function (xhr) {
+              let mensajeError = "No se pudo procesar tu solicitud";
+
+              if (xhr.responseText.includes("ya participa")) {
+                mensajeError = "Ya estás participando en este proyecto";
+              } else if (xhr.responseText.includes("proyecto no encontrado")) {
+                mensajeError = "El proyecto no está disponible";
+              } else if (xhr.responseText.includes("proyecto expirado")) {
+                mensajeError = "Este proyecto ya ha expirado";
+              }
+
+              mostrarNotificacion(mensajeError, "error");
+            },
+            complete: function () {
+              ocultarLoader();
+            },
+          });
+        });
+
+        const menuToggle = document.querySelector(".menu-toggle");
+        const navbarUl = document.querySelector(".navbar ul");
+
+        menuToggle.addEventListener("click", function (e) {
+          e.stopPropagation();
+          navbarUl.classList.toggle("active");
+        });
+
+        document.addEventListener("click", function (e) {
+          if (
+            navbarUl.classList.contains("active") &&
+            !navbarUl.contains(e.target)
+          ) {
+            navbarUl.classList.remove("active");
+          }
+        });
+
+        navbarUl.querySelectorAll("a").forEach((link) => {
+          link.addEventListener("click", function () {
+            navbarUl.classList.remove("active");
+          });
+        });
+      });
+    </script>
+  </body>
+</html>

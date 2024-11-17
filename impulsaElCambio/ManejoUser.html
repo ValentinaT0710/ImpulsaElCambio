@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta charset="UTF-8">
+    <title>Impulsa el Cambio - Manejo de Usuarios</title>
+    <link rel="stylesheet" type="text/css" href="/ManejoUser.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Limelight&family=Literata:ital,opsz,wght@0,7..72,200..900;1,7..72,200..900&family=Luckiest+Guy&family=Lusitana:wght@400;700&family=Mitr:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+    <header class="header">
+        <div class="logo">
+            <img src="/Imagenes/Logo.png" alt="Logo" class="Logo">
+        </div>
+        <h1 class="IMPULSA-EL-CAMBIO">IMPULSA EL CAMBIO</h1>
+        <button class="menu-mobile" aria-label="Menu">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </button>
+    </header>
+    <nav>
+        <ul class="menu-horizontal">
+            <li><a href="/admin/inicio"><i class="fas fa-home"></i> Inicio</a></li>
+            <li>
+                <a href="#"><i class="fas fa-project-diagram"></i> Proyectos <i class="fas fa-caret-down"></i></a>
+                <ul class="menu-vertical">
+                    <li><a href="/admin/proyectos"><i class="fas fa-list"></i> Ver Proyectos</a></li>
+                    <li><a href="/admin/desafios/crear"><i class="fas fa-flag"></i> Desafío</a></li>
+
+                </ul>
+            </li>
+            <li>
+                <a href="#"><i class="fas fa-users"></i> Voluntarios <i class="fas fa-caret-down"></i></a>
+                <ul class="menu-vertical">
+                    <li><a href="/Graficas"><i class="fas fa-chart-line"></i> Ver Graficas</a></li>
+                    <li><a href="/admin/Estadisticas"><i class="fas fa-chart-bar"></i> Estadísticas</a></li>
+                    <li><a href="/admin/ManejoUser"><i class="fas fa-user-plus"></i> Registro</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="#"><i class="fas fa-comments"></i> Foro <i class="fas fa-caret-down"></i></a>
+                <ul class="menu-vertical">
+                    <li><a href="/admin/foroAdmin"><i class="fas fa-comment-dots"></i> Ver Publicaciones</a></li>
+
+                </ul>
+            </li>
+            <li>
+                <a href="#"><i class="fas fa-user"></i> Mi Cuenta <i class="fas fa-caret-down"></i></a>
+                <ul class="menu-vertical">
+                    <li><a href="/PerfilAdmin"><i class="fas fa-id-card"></i> Perfil</a></li>
+                    <li><a href="#"><i class="fas fa-cog"></i> Configuración</a></li>
+                    <li><a href="/admin/cerrarSesion"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a></li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+    <main>
+        <h1>Lista de Usuarios</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Correo</th>
+                    <th>Número Telefónico</th>
+                    <th>Empresa</th>
+                    <th>Rol</th>
+                    <th>Posts en Foro</th>
+                    <th>Proyectos Participados</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="usuario : ${usuarios}">
+                    <td th:text="${usuario.id}"></td>
+                    <td th:text="${usuario.nombre}"></td>
+                    <td th:text="${usuario.correo}"></td>
+                    <td th:text="${usuario.numero}"></td>
+                    <td th:text="${usuario.empresa}"></td>
+                    <td th:text="${usuario.rol}"></td>
+                    <td th:text="${actividadForo.get(usuario.id)}"></td>
+                    <td th:text="${participacionProyectos.get(usuario.id)}"></td>
+                    <td>
+                        <button th:onclick="'eliminarCuenta(' + ${usuario.id} + ')'">Eliminar Cuenta</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </main>
+    <footer>
+        <!-- ... (footer content) ... -->
+    </footer>
+    <script>
+        // Manejador del menú móvil
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuMobile = document.querySelector('.menu-mobile');
+            const menuHorizontal = document.querySelector('.menu-horizontal');
+
+            menuMobile.addEventListener('click', function(e) {
+                e.stopPropagation();
+                menuHorizontal.classList.toggle('active');
+            });
+
+            // Cerrar menú al hacer clic fuera
+            document.addEventListener('click', function(e) {
+                if (!menuHorizontal.contains(e.target) && !menuMobile.contains(e.target)) {
+                    menuHorizontal.classList.remove('active');
+                }
+            });
+
+            // Prevenir que los clics dentro del menú lo cierren
+            menuHorizontal.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+        });
+
+        function eliminarCuenta(usuarioId) {
+            if (confirm('¿Estás seguro de que quieres eliminar esta cuenta? Esta acción eliminará todos los datos asociados y no se puede deshacer.')) {
+                fetch('/admin/ManejoUser/eliminarCuenta/' + usuarioId, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            // Include CSRF token if you're using Spring Security
+                            // 'X-CSRF-TOKEN': document.querySelector('meta[name="_csrf"]').getAttribute('content')
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert(data.message);
+                            location.reload();
+                        } else {
+                            alert('Error: ' + data.message);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Error al eliminar la cuenta: ' + error);
+                    });
+            }
+        }
+    </script>
+</body>
+
+</html>

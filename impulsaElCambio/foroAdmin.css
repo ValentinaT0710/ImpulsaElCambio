@@ -1,0 +1,525 @@
+body {
+    background-size: 400% 400%;
+    animation: gradientAnimation 12s ease infinite;
+    font-family: 'Mitr', sans-serif;
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
+    font-family: 'Limelight', 'Literata', sans-serif;
+    background: linear-gradient(200deg, #f3f3f3, #dbacee, #db80f1);
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    overflow-x: hidden;
+    width: 100%;
+    min-width: 320px;
+}
+@keyframes gradientAnimation {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px;
+    background-color: white;
+    gap: 20px;
+    width: 100%;
+    flex-wrap: wrap;
+}
+
+.logo img {
+    width: 200px;
+    max-height: 100px;
+}
+
+.IMPULSA-EL-CAMBIO {
+    font-size: 100px;
+    color: rgba(3, 183, 188, 0.9);
+    text-shadow: 0 4px 6px #03b7bc;
+    white-space: nowrap;
+    margin: 0;
+    font-family: 'Limelight', 'Literata', sans-serif;
+}
+.menu-horizontal {
+    list-style: none;
+    display: flex;
+    justify-content: center; 
+    background-color: #8e44ad;
+    padding: 0;
+    margin: 0;
+    position: center;
+    gap: 10px; 
+}
+
+.menu-horizontal > li {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.menu-horizontal > li > a {
+    display: block;
+    padding: 15px 20px; 
+    color: white;
+    text-decoration: none;
+    font-family: 'Mitr', sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+}
+
+/* Estilos para el menú desplegable */
+.menu-vertical {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: #9b59b6;
+    padding: 0;
+    list-style: none;
+    min-width: 180px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.menu-horizontal > li:hover .menu-vertical {
+    display: block;
+}
+
+.menu-vertical li {
+    width: 100%;
+}
+
+.menu-vertical li a {
+    display: block;
+    padding: 12px 20px;
+    color: white;
+    text-decoration: none;
+    font-family: 'Mitr', sans-serif;
+    font-weight: 300;
+    font-size: 14px;
+}
+
+/* Efectos hover */
+.menu-horizontal > li > a:hover,
+.menu-vertical li a:hover {
+    background-color: #8e44ad;
+}
+
+/* Estilo para el ícono de flecha */
+.fas.fa-caret-down {
+    margin-left: 5px;
+}
+.foroContenido {
+    margin: 20px auto;
+    width: 80%;
+    max-width: 800px;
+    font-family: 'Lusitana', serif;
+}
+
+.foroContenido {
+    margin: 20px auto;
+    width: 80%;
+    max-width: 800px;
+    font-family: 'Lusitana', serif;
+}
+
+.foroPredeterminado, .foroEditable {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 15px;
+    background-color: #fff;
+    margin-bottom: 20px;
+}
+
+.usuarioInfo {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.foto {
+    width: 50px;
+    height: 50px;
+    margin-right: 10px;
+}
+
+.foto img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.nombreUsuario {
+    font-weight: bold;
+    font-family: 'Lusitana', serif;
+}
+
+.descripcion {
+    font-size: 16px;
+    color: #333;
+    margin: 10px 0;
+}
+
+.foroEditable input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-family: 'Lusitana', serif;
+    font-size: 16px;
+}
+
+.foroEditable button {
+    background-color: #03b7bc;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.3s;
+}
+
+.foroEditable button:hover {
+    background-color: #029ba1;
+}
+
+.borrarComentario {
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+.borrarComentario:hover {
+    background-color: #ff1a1a;
+}
+
+.botonesAdmin {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.editarComentario, .borrarComentario {
+    padding: 5px 10px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
+}
+
+.editarComentario {
+    background-color: #03b7bc;
+    color: white;
+}
+
+.editarComentario:hover {
+    background-color: #029ba1;
+}
+
+.borrarComentario {
+    background-color: #ff4d4d;
+    color: white;
+}
+
+.borrarComentario:hover {
+    background-color: #ff1a1a;
+}
+
+/* New styles for forum posts */
+.foro-posts {
+    max-width: 800px;
+    margin: 0 auto;
+    background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white */
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.foro-post {
+    background-color: #ffffff; /* White background for better contrast */
+    border: 1px solid #8e44ad;
+    border-radius: 12px;
+    margin-bottom: 25px;
+    padding: 20px;
+    box-shadow: 0 2px 5px rgba(142, 68, 173, 0.2);
+}
+
+.post-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    border-bottom: 2px solid rgba(142, 68, 173, 0.3); /* Subtle separator */
+    padding-bottom: 10px;
+}
+
+.usuario-info {
+    display: flex;
+    align-items: center;
+}
+
+.usuario-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 15px;
+    object-fit: cover;
+    border: 2px solid #03b7bc;
+}
+
+.usuario-nombre {
+    font-weight: bold;
+    font-size: 1.1em;
+    color: #8e44ad; /* Purple color from the menu */
+}
+
+.post-fecha {
+    font-size: 0.9em;
+    color: #9b59b6; /* Lighter purple for secondary info */
+}
+
+.post-contenido {
+    margin-bottom: 20px;
+    font-size: 1em;
+    line-height: 1.6;
+    color: #333;
+}
+
+.post-acciones {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.post-acciones button {
+    margin-left: 10px;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: background-color 0.3s ease;
+}
+
+.sin-comentarios {
+    text-align: center;
+    padding: 30px;
+    background-color: #ffffff; /* White background for better contrast */
+    border: 1px solid #8e44ad;
+    border-radius: 12px;
+    margin-top: 30px;
+    font-size: 1.1em;
+    color: #8e44ad;
+    box-shadow: 0 2px 5px rgba(142, 68, 173, 0.2);
+}
+/* Hamburger menu styles */
+.menu-mobile {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+}
+
+.menu-mobile .bar {
+    display: block;
+    width: 25px;
+    height: 3px;
+    margin: 5px auto;
+    background-color: #333;
+    transition: all 0.3s ease-in-out;
+}
+
+/* Overlay for mobile menu */
+.overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 998;
+    -webkit-backdrop-filter: blur(2px);
+    backdrop-filter: blur(2px);
+}
+
+.overlay.active {
+    display: block;
+}
+
+/* Media queries for responsive design */
+@media screen and (max-width: 1024px) {
+    .IMPULSA-EL-CAMBIO {
+        font-size: 60px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .header {
+        padding: 10px;
+        flex-wrap: wrap;
+    }
+
+    .menu-mobile {
+        order: 1;
+        display: block;
+    }
+
+    .logo {
+        order: 2;
+    }
+
+    .IMPULSA-EL-CAMBIO {
+        order: 3;
+        width: 100%;
+        text-align: center;
+    }
+
+    .menu-horizontal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: -80%;
+        width: 80%;
+        max-width: 300px;
+        height: 100vh;
+        background-color: #8e44ad;
+        flex-direction: column;
+        padding-top: 60px;
+        transition: left 0.3s ease;
+        z-index: 999;
+        overflow-y: auto;
+    }
+
+    .menu-horizontal.active {
+        left: 0;
+        display: flex;
+    }
+
+
+    .menu-vertical {
+        position: static;
+        display: none;
+        background-color: rgba(155, 89, 182, 0.9);
+        width: 100%;
+        padding-left: 20px;
+    }
+
+    .menu-horizontal > li.active .menu-vertical {
+        display: block;
+    }
+
+    .menu-mobile {
+        display: block;
+    }
+
+    nav {
+        display: none;
+        width: 100%;
+        position: absolute;
+        top: 80px; /* Ajusta según la altura de tu header */
+        left: 0;
+        background-color: #8e44ad;
+        box-shadow: 0 2px 5px rgba(153, 14, 111, 0.1);
+    }
+
+    nav.active {
+        display: block;
+    }
+
+    .menu-horizontal {
+        flex-direction: column;
+    }
+
+    .menu-horizontal > li {
+        width: 100%;
+    }
+
+    .menu-vertical {
+        position: static;
+        width: 100%;
+        display: none;
+    }
+
+    .menu-horizontal li:hover .menu-vertical {
+        display: block;
+    }
+
+    /* Animación para el ícono hamburguesa */
+    .menu-mobile.active .bar:nth-child(2) {
+        opacity: 0;
+    }
+
+    .menu-mobile.active .bar:nth-child(1) {
+        transform: translateY(8px) rotate(45deg);
+    }
+
+    .menu-mobile.active .bar:nth-child(3) {
+        transform: translateY(-8px) rotate(-45deg);
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .header {
+        padding: 5px;
+    }
+
+    .IMPULSA-EL-CAMBIO {
+        font-size: 24px;
+    }
+
+    .logo img {
+        width: 80px;
+    }
+
+    main {
+        padding: 1rem;
+    }
+
+    .menu-horizontal {
+        width: 100%;
+    }
+}
+
+/* Para dispositivos muy pequeños */
+@media screen and (max-width: 320px) {
+    .IMPULSA-EL-CAMBIO {
+        font-size: 20px;
+    }
+
+    .logo img {
+        width: 60px;
+    }
+
+}
+
+/* Asegurar que el contenido no se desborde */
+* {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.menu-mobile, 
+.menu-horizontal a {
+    min-height: 44px;
+    min-width: 44px;
+}

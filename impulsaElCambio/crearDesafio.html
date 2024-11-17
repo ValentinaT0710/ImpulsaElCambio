@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Impulsa el Cambio - Desafío</title>
+    <link rel="stylesheet" type="text/css" href="/AdminDesafio.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Limelight&family=Literata:ital,opsz,wght@0,7..72,200..900;1,7..72,200..900&family=Luckiest+Guy&family=Lusitana:wght@400;700&family=Mitr:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+
+<body>
+    <header class="header">
+        <div class="logo">
+            <img src="/Imagenes/Logo.png" alt="Logo" class="Logo">
+        </div>
+        <h1 class="IMPULSA-EL-CAMBIO">IMPULSA EL CAMBIO</h1>
+        <button class="menu-mobile" aria-label="Menu">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </button>
+    </header>
+    <nav>
+        <ul class="menu-horizontal">
+            <li><a href="/admin/inicio"><i class="fas fa-home"></i> Inicio</a></li>
+            <li>
+                <a href="#"><i class="fas fa-project-diagram"></i> Proyectos <i class="fas fa-caret-down"></i></a>
+                <ul class="menu-vertical">
+                    <li><a href="/admin/proyectos"><i class="fas fa-list"></i> Ver Proyectos</a></li>
+                    <li><a href="/admin/desafios/crear"><i class="fas fa-flag"></i> Desafío</a></li>
+
+                </ul>
+            </li>
+            <li>
+                <a href="#"><i class="fas fa-users"></i> Voluntarios <i class="fas fa-caret-down"></i></a>
+                <ul class="menu-vertical">
+                    <li><a href="/Graficas"><i class="fas fa-chart-line"></i> Ver Graficas</a></li>
+                    <li><a href="/admin/Estadisticas"><i class="fas fa-chart-bar"></i> Estadísticas</a></li>
+                    <li><a href="/admin/ManejoUser"><i class="fas fa-user-plus"></i> Registro</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="#"><i class="fas fa-comments"></i> Foro <i class="fas fa-caret-down"></i></a>
+                <ul class="menu-vertical">
+                    <li><a href="/admin/foroAdmin"><i class="fas fa-comment-dots"></i> Ver Publicaciones</a></li>
+
+                </ul>
+            </li>
+            <li>
+                <a href="#"><i class="fas fa-user"></i> Mi Cuenta <i class="fas fa-caret-down"></i></a>
+                <ul class="menu-vertical">
+                    <li><a href="/PerfilAdmin"><i class="fas fa-id-card"></i> Perfil</a></li>
+                    <li><a href="#"><i class="fas fa-cog"></i> Configuración</a></li>
+                    <li><a href="/admin/cerrarSesion"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a></li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+
+    <main class="container">
+        <section class="desafios-section">
+            <h2>Crear Nuevo Desafío</h2>
+            <form th:action="@{/admin/desafios/crear}" method="post" class="desafio-form" id="formCrearDesafio">
+                <div class="form-group">
+                    <label for="tipoDesafio">Tipo de Desafío:</label>
+                    <select id="tipoDesafio" name="tipoDesafio" required>
+                        <option value="PUBLICAR_FORO">Publicar en el Foro</option>
+                        <option value="UNIRSE_PROYECTO">Unirse a un Proyecto</option>
+                    </select>
+                </div>
+
+                <div class="form-group" id="proyectoIdGroup" style="display: none;">
+                    <label for="proyectoId">Proyecto:</label>
+                    <select id="proyectoId" name="proyectoId">
+                        <option value="">Seleccione un proyecto...</option>
+                        <option th:if="${proyectos != null}" 
+                                th:each="proyecto : ${proyectos}" 
+                                th:value="${proyecto.id}" 
+                                th:text="${proyecto.nombre}">
+                        </option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="puntosRecompensa">Puntos de Recompensa:</label>
+                    <input type="number" id="puntosRecompensa" name="puntosRecompensa" required min="1">
+                </div>
+
+                <div class="form-group">
+                    <label for="fechaInicio">Fecha de Inicio:</label>
+                    <input type="datetime-local" id="fechaInicio" name="fechaInicio" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="fechaFin">Fecha de Fin:</label>
+                    <input type="datetime-local" id="fechaFin" name="fechaFin" required>
+                </div>
+
+                <button type="submit" class="btn-crear">Crear Desafío</button>
+            </form>
+        </section>
+
+        <section class="desafios-activos">
+            <h2>Desafíos Activos</h2>
+            <div class="desafios-grid">
+                <div th:if="${desafiosActivos != null}" th:each="desafio : ${desafiosActivos}" class="desafio-card">
+                    <h3 th:text="${desafio.tipoDesafio != null ? desafio.tipoDesafio.descripcion : 'Sin tipo'}">Tipo de Desafío</h3>
+                    <div class="desafio-info">
+                        <span th:text="'Puntos: ' + ${desafio.puntosRecompensa}">Puntos: 0</span>
+                        <span th:text="'Participantes: ' + ${desafio.participantes != null ? desafio.participantes.size() : 0}">Participantes: 0</span>
+                        <span th:if="${desafio.tipoDesafio != null && desafio.tipoDesafio.name() == 'UNIRSE_PROYECTO' && desafio.proyectoId != null}" th:text="'Proyecto ID: ' + ${desafio.proyectoId}">Proyecto: 0</span>
+                    </div>
+                    <div class="desafio-fechas">
+                        <span th:if="${desafio.fechaInicio != null}" th:text="'Inicio: ' + ${#temporals.format(desafio.fechaInicio, 'dd/MM/yyyy HH:mm')}">Inicio: -</span>
+                        <span th:if="${desafio.fechaFin != null}" th:text="'Fin: ' + ${#temporals.format(desafio.fechaFin, 'dd/MM/yyyy HH:mm')}">Fin: -</span>
+                    </div>
+                    <div class="desafio-status">
+                        <span th:text="'Estado: ' + (${desafio.activo} ? 'Activo' : 'Inactivo')">Estado: -</span>
+                    </div>
+                    <div class="desafio-actions">
+                        <button class="btn-eliminar" th:data-desafio-id="${desafio.id}" onclick="eliminarDesafio(this.getAttribute('data-desafio-id'))">
+                            Eliminar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+
+    <script th:inline="javascript">
+        let stompClient = null;
+
+        // Conectar WebSocket
+        function conectarWebSocket() {
+            console.log('Iniciando conexión WebSocket...');
+            const socket = new SockJS('/ws-proyectos');
+            stompClient = Stomp.over(socket);
+
+            stompClient.debug = function(str) {
+                console.log(str);
+            };
+
+            stompClient.connect({}, function(frame) {
+                console.log('Conectado: ' + frame);
+                stompClient.subscribe('/topic/desafios', function(message) {
+                    try {
+                        const data = JSON.parse(message.body);
+                        console.log('Mensaje WebSocket recibido:', data);
+                        actualizarListaDesafios(data);
+                    } catch (error) {
+                        console.error('Error procesando mensaje:', error);
+                    }
+                });
+            }, function(error) {
+                console.error('Error de conexión:', error);
+                setTimeout(conectarWebSocket, 5000);
+            });
+        }
+
+        function actualizarListaDesafios(data) {
+            const desafiosGrid = document.querySelector('.desafios-grid');
+
+            if (!desafiosGrid) {
+                console.error('No se encontró el contenedor de desafíos');
+                return;
+            }
+
+            console.log('Actualizando desafíos con datos:', data);
+
+            if (data.tipo === 'NUEVO_DESAFIO') {
+                const desafioId = data.desafio.id;
+                if (!document.querySelector(`[data-desafio-id="${desafioId}"]`)) {
+                    const nuevaTarjeta = crearTarjetaDesafio(data.desafio);
+                    desafiosGrid.insertAdjacentHTML('afterbegin', nuevaTarjeta);
+                }
+            } else if (data.tipo === 'ELIMINAR_DESAFIO') {
+                console.log('Eliminando desafío:', data.desafioId);
+                const tarjetaExistente = document.querySelector(`[data-desafio-id="${data.desafioId}"]`);
+
+                if (tarjetaExistente) {
+                    tarjetaExistente.remove();
+                    console.log('Tarjeta eliminada correctamente');
+
+                    // Verificar si no quedan desafíos
+                    const tarjetasRestantes = desafiosGrid.querySelectorAll('.desafio-card');
+                    if (tarjetasRestantes.length === 0) {
+                        desafiosGrid.innerHTML = '<div><p>No hay desafíos activos disponibles en este momento.</p></div>';
+                    }
+                }
+            }
+        }
+
+        function crearTarjetaDesafio(desafio) {
+            const fechaInicio = new Date(desafio.fechaInicio).toLocaleString('es-ES');
+            const fechaFin = new Date(desafio.fechaFin).toLocaleString('es-ES');
+
+            return `
+                <div class="desafio-card" data-desafio-id="${desafio.id}">
+                    <div class="desafio-header">
+                        <h3>${desafio.tipoDesafio}</h3>
+                        <span class="puntos">${desafio.puntosRecompensa} pts</span>
+                    </div>
+                    <div class="desafio-content">
+                        <div class="desafio-info">
+                            <div class="fecha">Inicio: ${fechaInicio}</div>
+                            <div class="fecha">Fin: ${fechaFin}</div>
+                        </div>
+                        <div class="desafio-status">
+                            <span>Estado: ${desafio.activo ? 'Activo' : 'Inactivo'}</span>
+                        </div>
+                        ${desafio.proyectoId ? `<div>Proyecto ID: ${desafio.proyectoId}</div>` : ''}
+                    </div>
+                    <div class="desafio-actions">
+                        <button class="btn-eliminar" onclick="eliminarDesafio('${desafio.id}')">
+                            Eliminar
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Manejador del formulario de creación
+        document.getElementById('formCrearDesafio').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            
+            fetch('/admin/desafios/crear', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Error al crear el desafío');
+                }
+                return response.text();
+            })
+            .then(() => {
+                alert('Desafío creado exitosamente');
+                this.reset();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error al crear el desafío');
+            });
+        });
+
+        // Inicializar WebSocket cuando el documento esté listo
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Iniciando aplicación...');
+            conectarWebSocket();
+            
+            // Manejador del tipo de desafío
+            document.getElementById('tipoDesafio').addEventListener('change', function() {
+                const proyectoGroup = document.getElementById('proyectoIdGroup');
+                proyectoGroup.style.display = this.value === 'UNIRSE_PROYECTO' ? 'block' : 'none';
+            });
+        });
+
+        // Función eliminar actualizada
+        function eliminarDesafio(desafioId) {
+            if (confirm('¿Estás seguro de que deseas eliminar este desafío?')) {
+                fetch(`/admin/desafios/${desafioId}/eliminar`, {
+                    method: 'DELETE'
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Error al eliminar el desafío');
+                    }
+                    // Ya no necesitamos eliminar la tarjeta aquí porque se manejará a través del WebSocket
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Ocurrió un error al intentar eliminar el desafío');
+                });
+            }
+        }
+
+        // Manejador del menú móvil
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuMobile = document.querySelector('.menu-mobile');
+            const menuHorizontal = document.querySelector('.menu-horizontal');
+            
+            menuMobile.addEventListener('click', function() {
+                menuHorizontal.classList.toggle('active');
+            });
+        });
+    </script>
+</body>
+
+</html>

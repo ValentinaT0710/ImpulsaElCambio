@@ -1,0 +1,996 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Limelight", "Literata", sans-serif;
+  background: linear-gradient(135deg, #fff, #c8a2c8 100%);
+  overflow-x: hidden;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 5px;
+  background-color: white;
+  gap: 20px;
+}
+
+.logo img {
+  width: 400px;
+  max-height: 300px;
+  margin-right: 10px;
+}
+
+.IMPULSA-EL-CAMBIO {
+  font-size: 85px;
+  color: #03b7bce6;
+  -webkit-text-stroke: 0.5px #ffffff;
+  text-shadow: 0 4px 6px #03b7bce6;
+  margin: 5px 0;
+  font-family: "Limelight", "Literata", sans-serif;
+  margin: 0;
+  font-weight: normal;
+}
+
+.menu-horizontal {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  background-color: #cb73fa;
+  padding: 0;
+  margin: 0;
+  position: center;
+  gap: 10px;
+}
+
+.menu-horizontal > li {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.menu-horizontal > li > a {
+  text-decoration: none;
+  color: #000;
+  font-size: 24px;
+  font-weight: bold;
+  font-family: "Literata", serif;
+  padding: 16px 32px;
+  display: block;
+  border: none;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+/* Estilos para el menú desplegable */
+
+.menu-vertical {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: #cb73fa;
+  padding: 0;
+  list-style: none;
+  min-width: 180px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.menu-horizontal > li:hover .menu-vertical {
+  display: block;
+}
+
+.menu-vertical li {
+  width: 100%;
+}
+
+.menu-vertical li a {
+  text-decoration: none;
+  color: #000;
+  font-size: 24px;
+  font-weight: bold;
+  font-family: "Literata", serif;
+  padding: 16px 32px;
+  display: block;
+  border: none;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+/* Efectos hover */
+
+.menu-horizontal > li > a:hover,
+.menu-vertical li a:hover {
+  background-color: #45b5c9;
+  color: white;
+  transform: scale(1.05);
+}
+
+/* Estilo para el ícono de flecha */
+
+.fas.fa-caret-down {
+  margin-left: 5px;
+}
+
+.inicio-usuario {
+  text-align: center;
+  padding: 2rem;
+  font-family: "Mitr";
+  border: none;
+}
+
+.inicio-usuario h2 {
+  font-size: 80px;
+  font-weight: normal;
+  text-shadow: 0 4px 6px #45b5c9;
+  -webkit-text-stroke: 0.5px #ffffff;
+  color: #45b5c9;
+  margin: 5px 0 10px 0;
+  font-family: "Luckiest Guy";
+  text-transform: uppercase;
+  text-align: center;
+}
+
+/* Sección desafíos y proyectos */
+.seccion-desafios,
+.seccion-proyectos {
+  padding: 20px;
+  border: none;
+}
+
+h3 {
+  font-size: 28px;
+  color: #000000;
+  margin-bottom: 15px;
+}
+
+.tarjetas-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: center;
+  border: none;
+}
+
+.tarjeta-desafio,
+.tarjeta-proyecto {
+  background: white;
+  border: 2px solid #cb73fa;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 15px;
+  text-align: left;
+  max-width: 300px;
+  width: 100%;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.tarjeta-desafio:hover,
+.tarjeta-proyecto:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.tarjeta-desafio h4,
+.tarjeta-proyecto h4 {
+  font-size: 20px;
+  margin-bottom: 10px;
+  color: #000000;
+}
+
+.tarjeta-desafio .fecha-limite,
+.tarjeta-proyecto .participantes {
+  font-size: 14px;
+  color: #000000;
+}
+
+.estado-vacio p {
+  font-size: 18px;
+  color: #000000;
+  text-align: center;
+  margin-top: 20px;
+  border: none;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.menu-mobile {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 15px;
+  z-index: 1001;
+}
+
+.menu-mobile .bar {
+  display: block;
+  width: 25px;
+  height: 3px;
+  margin: 5px auto;
+  background-color: #8e44ad;
+  transition: all 0.3s ease;
+}
+
+.menu-mobile.active .bar:nth-child(1) {
+  transform: translateY(8px) rotate(45deg);
+}
+
+.menu-mobile.active .bar:nth-child(2) {
+  opacity: 0;
+}
+
+.menu-mobile.active .bar:nth-child(3) {
+  transform: translateY(-8px) rotate(-45deg);
+}
+
+body.no-scroll {
+  overflow: hidden;
+}
+
+/* Overlay mejorado */
+
+.overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.overlay.active {
+  display: block;
+  opacity: 1;
+}
+
+@media screen and (max-width: 768px) {
+  body {
+    background-color: #c8a2c8;
+  }
+
+  .header {
+    flex-direction: column;
+    padding: 1rem;
+  }
+
+  .IMPULSA-EL-CAMBIO {
+    font-size: 40px;
+  }
+
+  .logo img {
+    width: 80%;
+    max-height: 200px;
+  }
+
+  .inicio-usuario h2 {
+    font-size: 40px;
+  }
+
+  .menu-mobile {
+    order: 1;
+    display: block;
+  }
+
+  .menu-horizontal {
+    display: flex;
+    position: fixed;
+    top: 0;
+    left: -100%;
+    width: 80%;
+    max-width: 300px;
+    height: 100vh;
+    background-color: white;
+    flex-direction: column;
+    padding-top: 60px;
+    transition: left 0.3s ease;
+    z-index: 999;
+    overflow-y: auto;
+    gap: 0;
+  }
+  .menu-horizontal.active {
+    left: 0;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+  }
+  .menu-horizontal > li > a {
+    padding: 15px 20px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: #333;
+    font-size: 18px;
+    border-bottom: 1px solid #eee;
+    transition: background-color 0.2s ease;
+  }
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  .menu-vertical {
+    position: static;
+    display: none;
+    background-color: #f8f8f8;
+    box-shadow: none;
+    padding: 0;
+  }
+  .menu-vertical li a {
+    font-size: 16px;
+    padding: 12px 35px;
+    color: #666;
+  }
+  .menu-horizontal > li.active .menu-vertical {
+    display: block;
+  }
+  .menu-horizontal > li > a:hover {
+    background-color: #f5f5f5;
+    color: #03b7bc;
+    transform: none;
+  }
+  nav {
+    display: none;
+    /* Ocultar nav en móvil por defecto */
+  }
+  nav.active {
+    display: block;
+    /* Mostrar nav cuando está activo */
+  }
+  .menu-horizontal {
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+  }
+  .menu-horizontal.active {
+    transform: translateX(0);
+  }
+  .fas {
+    width: 20px;
+    text-align: center;
+    margin-right: 10px;
+  }
+  .fas.fa-caret-down {
+    margin-left: auto;
+    transition: transform 0.2s ease;
+  }
+  .menu-horizontal > li.active .fas.fa-caret-down {
+    transform: rotate(180deg);
+  }
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Limelight", "Literata", sans-serif;
+  background: linear-gradient(135deg, #fff, #c8a2c8 70%);
+  overflow-x: hidden;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 5px;
+  background-color: white;
+  gap: 20px;
+}
+
+.logo img {
+  width: 400px;
+  max-height: 300px;
+  margin-right: 10px;
+}
+
+.IMPULSA-EL-CAMBIO {
+  font-size: 85px;
+  color: #03b7bce6;
+  -webkit-text-stroke: 0.5px #ffffff;
+  text-shadow: 0 4px 6px #03b7bce6;
+  margin: 5px 0;
+  font-family: "Limelight", "Literata", sans-serif;
+  margin: 0;
+  font-weight: normal;
+}
+
+.menu-horizontal {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  background-color: #cb73fa;
+  padding: 0;
+  margin: 0;
+  position: center;
+  gap: 10px;
+}
+
+.menu-horizontal > li {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.menu-horizontal > li > a {
+  text-decoration: none;
+  color: #000;
+  font-size: 24px;
+  font-weight: bold;
+  font-family: "Literata", serif;
+  padding: 16px 32px;
+  display: block;
+  border: none;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+/* Estilos para el menú desplegable */
+
+.menu-vertical {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: #cb73fa;
+  padding: 0;
+  list-style: none;
+  min-width: 180px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.menu-horizontal > li:hover .menu-vertical {
+  display: block;
+}
+
+.menu-vertical li {
+  width: 100%;
+}
+
+.menu-vertical li a {
+  text-decoration: none;
+  color: #000;
+  font-size: 24px;
+  font-weight: bold;
+  font-family: "Literata", serif;
+  padding: 16px 32px;
+  display: block;
+  border: none;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+/* Efectos hover */
+
+.menu-horizontal > li > a:hover,
+.menu-vertical li a:hover {
+  background-color: #45b5c9;
+  color: white;
+  transform: scale(1.05);
+}
+
+/* Estilo para el ícono de flecha */
+
+.fas.fa-caret-down {
+  margin-left: 5px;
+}
+
+.h2 {
+  text-align: center;
+  font-size: 20px;
+}
+
+/* Estilos del Main Dashboard */
+
+main {
+  padding: 2rem;
+  flex-grow: 1;
+}
+
+main h2 {
+  text-align: center;
+  color: #000000;
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  position: relative;
+  padding-bottom: 15px;
+  font-family: Mitr;
+}
+
+main h2::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100px;
+  height: 4px;
+  background: linear-gradient(90deg, #8e44ad, #03b7bc);
+  border-radius: 2px;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  padding: 1rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.dashboard-card {
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(0, 0, 0, 0.18);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.dashboard-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 40px rgba(31, 38, 135, 0.25);
+}
+
+.dashboard-card h3 {
+  color: #8e44ad;
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+  position: relative;
+  padding-bottom: 10px;
+}
+
+.dashboard-card h3::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 50px;
+  height: 3px;
+  background: #03b7bc;
+  border-radius: 2px;
+}
+
+.dashboard-card p {
+  color: #555;
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.dashboard-card span {
+  font-weight: 600;
+  color: #8e44ad;
+  font-size: 1.2rem;
+  background: rgba(142, 68, 173, 0.1);
+  padding: 0.3rem 1rem;
+  border-radius: 15px;
+}
+
+.dashboard-card ul {
+  list-style: none;
+  padding: 0;
+}
+
+.dashboard-card li {
+  color: #555;
+  margin-bottom: 1rem;
+  padding-left: 1.5rem;
+  position: relative;
+}
+
+.dashboard-card li::before {
+  content: "•";
+  color: #03b7bc;
+  position: absolute;
+  left: 0;
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.dashboard-card button {
+  width: 100%;
+  padding: 1rem;
+  margin-top: 1rem;
+  background: linear-gradient(45deg, #8e44ad, #03b7bc);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.dashboard-card button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(3, 183, 188, 0.3);
+}
+
+/* Media Queries para Responsividad */
+
+@media screen and (max-width: 768px) {
+  main h2 {
+    font-size: 2rem;
+  }
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+    padding: 0.5rem;
+  }
+  .dashboard-card {
+    padding: 1.5rem;
+  }
+}
+
+/* Animaciones */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dashboard-card {
+  animation: fadeIn 0.5s ease forwards;
+}
+
+.dashboard-grid {
+  animation: fadeIn 0.5s ease forwards;
+}
+
+.menu-mobile {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 15px;
+  z-index: 1001;
+}
+
+.menu-mobile .bar {
+  display: block;
+  width: 25px;
+  height: 3px;
+  margin: 5px auto;
+  background-color: #8e44ad;
+  transition: all 0.3s ease;
+}
+
+.menu-mobile.active .bar:nth-child(1) {
+  transform: translateY(8px) rotate(45deg);
+}
+
+.menu-mobile.active .bar:nth-child(2) {
+  opacity: 0;
+}
+
+.menu-mobile.active .bar:nth-child(3) {
+  transform: translateY(-8px) rotate(-45deg);
+}
+
+/* Prevenir scroll cuando el menú está activo */
+
+body.no-scroll {
+  overflow: hidden;
+}
+
+/* Overlay mejorado */
+
+.overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 998;
+  backdrop-filter: blur(4px);
+  transition: opacity 0.3s ease;
+  opacity: 0;
+}
+
+.overlay.active {
+  display: block;
+  opacity: 1;
+}
+
+@media screen and (max-width: 768px) {
+  .header {
+    padding: 10px;
+    flex-wrap: wrap;
+  }
+  .menu-mobile {
+    order: 1;
+    display: block;
+  }
+  .logo {
+    order: 2;
+  }
+  .IMPULSA-EL-CAMBIO {
+    order: 3;
+    width: 100%;
+    text-align: center;
+  }
+  .menu-horizontal {
+    display: flex;
+    position: fixed;
+    top: 0;
+    left: -100%;
+    width: 80%;
+    max-width: 300px;
+    height: 100vh;
+    background-color: white;
+    flex-direction: column;
+    padding-top: 60px;
+    transition: left 0.3s ease;
+    z-index: 999;
+    overflow-y: auto;
+    gap: 0;
+  }
+  .menu-horizontal.active {
+    left: 0;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+  }
+  .menu-horizontal > li > a {
+    padding: 15px 20px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: #333;
+    font-size: 18px;
+    border-bottom: 1px solid #eee;
+    transition: background-color 0.2s ease;
+  }
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  .menu-vertical {
+    position: static;
+    display: none;
+    background-color: #f8f8f8;
+    box-shadow: none;
+    padding: 0;
+  }
+  .menu-vertical li a {
+    font-size: 16px;
+    padding: 12px 35px;
+    color: #666;
+  }
+  .menu-horizontal > li.active .menu-vertical {
+    display: block;
+  }
+  .menu-horizontal > li > a:hover {
+    background-color: #f5f5f5;
+    color: #03b7bc;
+    transform: none;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .header {
+    padding: 5px;
+  }
+  .IMPULSA-EL-CAMBIO {
+    font-size: 24px;
+  }
+  .logo img {
+    width: 80px;
+  }
+  .dashboard-card {
+    padding: 1rem;
+  }
+  main {
+    padding: 1rem;
+  }
+  .menu-horizontal {
+    width: 100%;
+  }
+}
+
+/* Para dispositivos muy pequeños */
+
+@media screen and (max-width: 320px) {
+  .IMPULSA-EL-CAMBIO {
+    font-size: 20px;
+  }
+  .logo img {
+    width: 60px;
+  }
+  .dashboard-card h3 {
+    font-size: 1.1rem;
+  }
+}
+
+/* Asegurar que el contenido no se desborde */
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.menu-mobile,
+.menu-horizontal a {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* Ajustar la visibilidad inicial del nav */
+
+nav {
+  width: 100%;
+}
+
+@media screen and (max-width: 768px) {
+  nav {
+    display: none;
+    /* Ocultar nav en móvil por defecto */
+  }
+  nav.active {
+    display: block;
+    /* Mostrar nav cuando está activo */
+  }
+  .menu-horizontal {
+    display: flex;
+    /* Mantener flex por defecto */
+    position: fixed;
+    top: 0;
+    left: -100%;
+    /* Iniciar fuera de la pantalla */
+    width: 80%;
+    max-width: 300px;
+    height: 100vh;
+    background-color: white;
+    flex-direction: column;
+    padding-top: 60px;
+    transition: left 0.3s ease;
+    z-index: 999;
+    gap: 0;
+  }
+  .menu-horizontal.active {
+    left: 0;
+    /* Mover a la vista cuando está activo */
+  }
+}
+
+/* Estilos mejorados para el menú móvil */
+@media screen and (max-width: 768px) {
+  .menu-mobile {
+    display: block;
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    z-index: 1002;
+    background-color: white;
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    padding: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  }
+
+  nav {
+    display: none;
+  }
+
+  nav.active {
+    display: block;
+  }
+
+  .menu-horizontal {
+    position: fixed;
+    top: 0;
+    left: -100%;
+    width: 80%;
+    max-width: 300px;
+    height: 100vh;
+    background-color: white;
+    flex-direction: column;
+    padding-top: 60px;
+    transition: left 0.3s ease;
+    z-index: 1001;
+    overflow-y: auto;
+    gap: 0;
+  }
+
+  .menu-horizontal.active {
+    left: 0;
+  }
+
+  .menu-horizontal > li {
+    width: 100%;
+  }
+
+  .menu-horizontal > li > a {
+    padding: 15px 20px;
+    border-bottom: 1px solid #eee;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: #333;
+  }
+
+  .menu-vertical {
+    position: static;
+    display: none;
+    width: 100%;
+    background-color: #f8f8f8;
+    box-shadow: none;
+  }
+
+  .menu-horizontal > li.active .menu-vertical {
+    display: block;
+  }
+
+  .menu-vertical li a {
+    padding: 12px 35px;
+    font-size: 14px;
+    color: #666;
+  }
+
+  /* Eliminar efectos de hover en móvil */
+  .menu-horizontal > li > a:hover,
+  .menu-vertical li a:hover {
+    background-color: #f5f5f5;
+    color: #03b7bc;
+    transform: none;
+  }
+
+  /* Iconos */
+  .fas {
+    width: 20px;
+    text-align: center;
+    margin-right: 10px;
+  }
+
+  .fas.fa-caret-down {
+    margin-left: auto;
+    transition: transform 0.2s ease;
+  }
+
+  .menu-horizontal > li.active .fas.fa-caret-down {
+    transform: rotate(180deg);
+  }
+}
+
+/* Overlay */
+.overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.overlay.active {
+  display: block;
+  opacity: 1;
+}

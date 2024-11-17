@@ -1,0 +1,212 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Limelight", "Literata", sans-serif;
+  background: linear-gradient(135deg, #fff, #c8a2c8 70%);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 5px;
+  background-color: white;
+  gap: 20px;
+}
+
+.logo img {
+  width: 400px;
+  max-height: 300px;
+  margin-right: 10px;
+}
+
+.IMPULSA-EL-CAMBIO {
+  font-size: 85px;
+  color: #03b7bce6;
+  -webkit-text-stroke: 0.5px #ffffff;
+  text-shadow: 0 4px 6px #03b7bce6;
+  margin: 5px 0;
+  font-family: "Limelight", "Literata", sans-serif;
+  margin: 0;
+  font-weight: normal;
+}
+
+.navbar {
+  background-color: #cb73fa;
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+  padding: 5px 0;
+  width: 100%;
+}
+
+.navbar ul {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  padding: 0;
+  margin: 0 10px;
+  width: 100%;
+}
+
+.navbar ul li {
+  margin: 0;
+}
+
+.navbar ul li a {
+  text-decoration: none;
+  color: #000;
+  font-size: 24px;
+  font-weight: bold;
+  font-family: "Literata", serif;
+  padding: 16px 32px;
+  display: block;
+  border: none;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.navbar ul li a i {
+  margin-right: 10px;
+}
+
+.navbar ul li a:hover {
+  background-color: #45b5c9;
+  color: white;
+  transform: scale(1.05);
+}
+
+.BIENVENIDO {
+  font-size: 80px;
+  font-weight: normal;
+  -webkit-text-stroke: 0.5px #400b58;
+  text-shadow: 0 4px 6px #690a69;
+  color: #cb73fa;
+  margin: 5px 0;
+  font-family: "Luckiest Guy", cursive;
+  margin-bottom: 10px;
+  text-align: center;
+  flex: 1;
+}
+
+.float-container {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+  display: flex;
+  gap: 2rem;
+  background: #ffffffc0;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  margin: 20px auto;
+  max-width: 1000px;
+}
+
+.float-left {
+  width: 400px;
+  height: auto;
+  flex: 1;
+  min-height: 300px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.text-content {
+  color: black;
+  font-size: 40px;
+  font-family: "Lusitana", serif;
+  text-align: center;
+  flex: 1;
+}
+
+.Botonvoluntario {
+  text-align: center;
+  margin: 30px 0;
+}
+
+.boton {
+  display: inline-block;
+  background: linear-gradient(to right, #6b2491 17%, #1cbec3 86%);
+  padding: 15px 50px;
+  border-radius: 25px;
+  cursor: pointer;
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+.boton:hover {
+  transform: scale(1.05);
+}
+
+.QUIERO-SER-VOLUNTARIO {
+  color: black;
+  text-decoration: none;
+  font-family: "Mitr", serif;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+@media screen and (max-width: 768px) {
+  body {
+    background: linear-gradient(135deg, #fff, #c8a2c8 70%);
+  }
+
+  .header {
+    flex-direction: column; /* Cambiar a columna */
+    align-items: center; /* Centrar elementos */
+    text-align: center; /* Centrar texto */
+  }
+
+  .logo img {
+    width: 80%; /* Ajustar el logo */
+    max-height: 200px; /* Reducir altura */
+  }
+
+  .IMPULSA-EL-CAMBIO {
+    font-size: 40px; /* Reducir tamaño del texto */
+    margin: 10px 0;
+  }
+
+  .navbar ul {
+    flex-direction: column; /* Cambiar a columna */
+  }
+
+  .navbar ul li a {
+    font-size: 18px; /* Reducir tamaño de texto */
+    padding: 12px 20px; /* Ajustar padding */
+  }
+
+  .BIENVENIDO {
+    font-size: 30px; /* Reducir tamaño del texto */
+    margin: 10px 0; /* Añadir margen */
+  }
+
+  .float-container {
+    flex-direction: column; /* Colocar elementos en columna */
+    align-items: center; /* Centrar horizontalmente */
+    padding: 10px; /* Aumentar padding para separación */
+    margin: 20px auto; /* Centrar el contenedor */
+    width: 70%; /* Ajustar el ancho */
+  }
+
+  .float-left {
+    width: 100%; /* La imagen ocupará todo el ancho */
+    display: flex;
+    justify-content: center; /* Centrar imagen */
+    margin-bottom: 5px; /* Separar de contenido inferior */
+  }
+
+  .text-content {
+    font-size: 18px; /* Ajustar tamaño de texto */
+    text-align: center; /* Centrar texto */
+    margin-top: 5px; /* Añadir margen superior */
+  }
+
+  .boton {
+    padding: 5px 10px; /* Reducir padding */
+    font-size: 16px; /* Ajustar tamaño de texto */
+    margin-top: 5px; /* Separar del contenido superior */
+  }
+}

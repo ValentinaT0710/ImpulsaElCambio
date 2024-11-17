@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Impulsa el cambio - Foro</title>
+    <link rel="stylesheet" href="/foroAdmin.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Limelight&family=Literata:ital,opsz,wght@0,7..72,200..900;1,7..72,200..900&family=Luckiest+Guy&family=Lusitana:wght@400;700&family=Mitr:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <header class="header">
+        <div class="logo">
+            <img src="/Imagenes/Logo.png" alt="Logo" class="Logo">
+        </div>
+        <h1 class="IMPULSA-EL-CAMBIO">IMPULSA EL CAMBIO</h1>
+        <button class="menu-mobile" aria-label="Menu">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </button>
+    </header>
+    <nav>
+        <ul class="menu-horizontal">
+            <li><a href="/admin/inicio"><i class="fas fa-home"></i> Inicio</a></li>
+            <li>
+                <a href="#"><i class="fas fa-project-diagram"></i> Proyectos <i class="fas fa-caret-down"></i></a>
+                <ul class="menu-vertical">
+                    <li><a href="/admin/proyectos"><i class="fas fa-list"></i> Ver Proyectos</a></li>
+                    <li><a href="/admin/desafios/crear"><i class="fas fa-flag"></i> Desafío</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="#"><i class="fas fa-users"></i> Voluntarios <i class="fas fa-caret-down"></i></a>
+                <ul class="menu-vertical">
+                   <li><a href="/Graficas"><i class="fas fa-chart-line"></i> Ver Graficas</a></li>
+                    <li><a href="/admin/Estadisticas"><i class="fas fa-chart-bar"></i> Estadísticas</a></li>
+                    <li><a href="/admin/ManejoUser"><i class="fas fa-user-plus"></i> Registro</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="#"><i class="fas fa-comments"></i> Foro <i class="fas fa-caret-down"></i></a>
+                <ul class="menu-vertical">
+                    <li><a href="/admin/foroAdmin"><i class="fas fa-comment-dots"></i> Ver Publicaciones</a></li>
+                  
+                </ul>
+            </li>
+            <li>
+                <a href="#"><i class="fas fa-user"></i> Mi Cuenta <i class="fas fa-caret-down"></i></a>
+                <ul class="menu-vertical">
+                    <li><a href="/PerfilAdmin"><i class="fas fa-id-card"></i> Perfil</a></li>
+                    <li><a href="#"><i class="fas fa-cog"></i> Configuración</a></li>
+                    <li><a href="/admin/cerrarSesion"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a></li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+<section class="foroContenido">
+    <div th:if="${not #lists.isEmpty(comentarios)}" class="foro-posts">
+        <div th:each="comentario : ${comentarios}" class="foro-post" th:id="'foro-' + ${comentario.id}">
+            <div class="post-header">
+                <div class="usuario-info">
+                    <img th:if="${comentario.usuario != null and comentario.usuario.imagenPerfil != null}"
+                         th:src="@{${comentario.usuario.imagenPerfil}}"
+                         alt="Foto de usuario" class="usuario-avatar">
+                    <img th:unless="${comentario.usuario != null and comentario.usuario.imagenPerfil != null}"
+                         src="/Imagenes/ImagenPredeterminada.jpg"
+                         alt="Foto de usuario predeterminada" class="usuario-avatar">
+                    <span class="usuario-nombre" th:text="${comentario.usuario != null ? comentario.usuario.nombre : 'Usuario Desconocido'}">Nombre de Usuario</span>
+                </div>
+                <div class="post-fecha" th:text="${#temporals.format(comentario.fechaCreacion, 'dd-MM-yyyy HH:mm')}">Fecha</div>
+            </div>
+            <div class="post-contenido">
+                <p th:text="${comentario.contenido}">Contenido del comentario</p>
+            </div>
+            <div class="post-acciones">
+                <button class="editarComentario" th:onclick="'editarComentario(' + ${comentario.id} + ')'">Editar</button>
+                <button class="borrarComentario" th:onclick="'borrarComentario(' + ${comentario.id} + ')'">Borrar</button>
+            </div>
+        </div>
+    </div>
+    <div th:if="${#lists.isEmpty(comentarios)}" class="sin-comentarios">
+        <p>No hay comentarios en el foro en este momento.</p>
+    </div>
+</section>
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    document.addEventListener('DOMContentLoaded', function() {
+        const menuMobile = document.querySelector('.menu-mobile');
+        const nav = document.querySelector('nav');
+        const menuHorizontal = document.querySelector('.menu-horizontal');
+        const body = document.body;
+        
+        // Crear overlay si no existe
+        let overlay = document.querySelector('.overlay');
+        if (!overlay) {
+            overlay = document.createElement('div');
+            overlay.className = 'overlay';
+            body.appendChild(overlay);
+        }
+
+        // Toggle menú hamburguesa
+        menuMobile.addEventListener('click', function(e) {
+            e.stopPropagation();
+            menuMobile.classList.toggle('active');
+            nav.classList.toggle('active');
+            menuHorizontal.classList.toggle('active');
+            overlay.classList.toggle('active');
+            body.style.overflow = body.style.overflow === 'hidden' ? '' : 'hidden';
+        });
+
+        // Cerrar menú al hacer click en overlay
+        overlay.addEventListener('click', function() {
+            menuMobile.classList.remove('active');
+            nav.classList.remove('active');
+            menuHorizontal.classList.remove('active');
+            overlay.classList.remove('active');
+            body.style.overflow = '';
+        });
+
+        // Manejar clicks en los elementos del menú
+        const menuItems = document.querySelectorAll('.menu-horizontal > li');
+        menuItems.forEach(item => {
+            const link = item.querySelector('a');
+            const submenu = item.querySelector('.menu-vertical');
+            
+            if (submenu) {
+                link.addEventListener('click', function(e) {
+                    if (window.innerWidth <= 768) {
+                        e.preventDefault();
+                        item.classList.toggle('active');
+                    }
+                });
+            }
+        });
+
+        // Cerrar menú al hacer click en enlaces del submenú
+        document.querySelectorAll('.menu-vertical a').forEach(link => {
+            link.addEventListener('click', function() {
+                if (window.innerWidth <= 768) {
+                    menuMobile.classList.remove('active');
+                    nav.classList.remove('active');
+                    menuHorizontal.classList.remove('active');
+                    overlay.classList.remove('active');
+                    body.style.overflow = '';
+                }
+            });
+        });
+    });
+
+    // Resto del código existente para el foro
+    const adminUser = true;
+    
+    function borrarComentario(id) {
+        fetch(`/admin/foroAdmin/borrarComentario/${id}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+        .then(response => {
+            if (!response.ok) {
+                return response.text().then(text => { throw new Error(text) });
+            }
+            return response.text();
+        })
+        .then(data => {
+            console.log(data);
+
+            location.reload();
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+            alert('Error al borrar el comentario: ' + error.message);
+        });
+    }
+
+    function editarComentario(id) {
+        var comentario = document.getElementById('foro-' + id);
+        var contenidoElement = comentario.querySelector('.post-contenido p');
+        var textoActual = contenidoElement.textContent;
+        
+        var nuevoTexto = prompt('Editar comentario:', textoActual);
+        
+        if (nuevoTexto !== null && nuevoTexto !== textoActual) {
+            fetch(`/admin/editarComentario/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(nuevoTexto)
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error('Error al editar el comentario');
+                }
+            })
+            .then(data => {
+                contenidoElement.textContent = data.contenido;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert(error.message);
+            });
+        }
+    }
+
+    function publicarComentario() {
+        const contenido = document.getElementById('nuevoComentario').value;
+        if (!contenido.trim()) {
+            alert('Por favor, escribe un comentario antes de publicar.');
+            return;
+        }
+
+        fetch('/foro/publicar', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(contenido)
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error al publicar el comentario');
+            }
+            return response.json();
+        })
+        .then(data => {
+            const nuevoComentario = crearElementoComentario(data);
+            const foroContenido = document.querySelector('.foroContenido');
+            foroContenido.insertBefore(nuevoComentario, foroContenido.firstChild);
+            document.getElementById('nuevoComentario').value = '';
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert(error.message);
+        });
+    }
+
+    function crearElementoComentario(comentario) {
+        const div = document.createElement('div');
+        div.className = 'foro-post';
+        div.id = 'foro-' + comentario.id;
+
+        const imagenPerfil = comentario.usuario && comentario.usuario.imagenPerfil
+            ? comentario.usuario.imagenPerfil
+            : '/Imagenes/ImagenPredeterminada.jpg';
+
+        div.innerHTML = `
+            <div class="post-header">
+                <div class="usuario-info">
+                    <img src="${imagenPerfil}" alt="Foto de usuario" class="usuario-avatar">
+                    <span class="usuario-nombre">${comentario.usuario ? comentario.usuario.nombre : 'Usuario Desconocido'}</span>
+                </div>
+                <div class="post-fecha">${new Date().toLocaleString()}</div>
+            </div>
+            <div class="post-contenido">
+                <p>${comentario.contenido}</p>
+            </div>
+            <div class="post-acciones">
+                <button class="editarComentario" onclick="editarComentario(${comentario.id})">Editar</button>
+                <button class="borrarComentario" onclick="borrarComentario(${comentario.id})">Borrar</button>
+            </div>
+        `;
+
+        return div;
+    }
+    /*]]>*/
+</script>
+</body>
+</html>

@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>Desafíos Disponibles</title>
+    <link rel="stylesheet" href="/DesafiosVoluntario.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Limelight&family=Literata:ital,opsz,wght@0,7..72,200..900;1,7..72,200..900&family=Luckiest+Guy&family=Lusitana:wght@400;700&family=Mitr:wght@200;300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <header class="header">
+      <div class="logo">
+        <img src="/Imagenes/Logo.png" alt="Logo" class="Logo" />
+      </div>
+      <h1 class="IMPULSA-EL-CAMBIO">IMPULSA EL CAMBIO</h1>
+      <button class="menu-mobile" id="menuButton" aria-label="Menu">
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+      </button>
+    </header>
+
+    <nav class="main-nav">
+      <ul class="menu-horizontal" id="mainMenu">
+        <li>
+          <a href="/inicioVoluntario">
+            <i class="fas fa-home" style="color: #ffd43b"></i> Inicio
+          </a>
+        </li>
+        <li>
+          <a href="/foro">
+            <i class="fas fa-comments" style="color: #69ff3b"></i> Foro
+          </a>
+        </li>
+        <li>
+          <a href="/proyectos">
+            <i class="fas fa-project-diagram" style="color: #558afd"></i>
+            Proyectos
+          </a>
+        </li>
+        <li>
+          <a href="/DesafioVoluntario">
+            <i class="fas fa-trophy" style="color: #ff3bad"></i> Desafíos
+          </a>
+        </li>
+        <li>
+          <a href="/Perfil">
+            <i class="fas fa-id-card" style="color: #ff3b45"></i> Perfil
+          </a>
+        </li>
+        <li>
+          <a href="/cerrarSesion">
+            <i class="fas fa-sign-out-alt" style="color: #3bffef"></i> Cerrar
+            Sesión
+          </a>
+        </li>
+      </ul>
+    </nav>
+    <main class="container">
+      <div class="desafios-grid">
+        <div th:if="${desafiosActivos.empty}">
+          <p>No hay desafíos activos disponibles en este momento.</p>
+        </div>
+        <div th:each="desafio : ${desafiosActivos}" class="desafio-card">
+          <div class="desafio-header">
+            <h2 th:text="${desafio.tipoDesafio?.descripcion}">
+              Tipo de Desafío
+            </h2>
+            <span class="puntos" th:text="${desafio.puntosRecompensa} + ' pts'"
+              >100 pts</span
+            >
+          </div>
+
+          <div class="desafio-content">
+            <p th:if="${desafio.tipoDesafio?.name() == 'PUBLICAR_FORO'}">
+              Publica un mensaje en el foro para completar este desafío
+            </p>
+            <p th:if="${desafio.tipoDesafio?.name() == 'UNIRSE_PROYECTO'}">
+              Únete al proyecto:
+              <span th:text="${nombresProyectos?.get(desafio.proyectoId)}"
+                >Nombre del Proyecto</span
+              >
+            </p>
+
+            <div class="desafio-info">
+              <div class="fecha">
+                <span>Inicio: </span>
+                <span
+                  th:text="${desafio.fechaInicio != null ? #temporals.format(desafio.fechaInicio, 'dd/MM/yyyy HH:mm') : '-'}"
+                  >01/01/2024</span
+                >
+              </div>
+              <div class="fecha">
+                <span>Fin: </span>
+                <span
+                  th:text="${desafio.fechaFin != null ? #temporals.format(desafio.fechaFin, 'dd/MM/yyyy HH:mm') : '-'}"
+                  >31/01/2024</span
+                >
+              </div>
+            </div>
+          </div>
+
+          <div class="desafio-actions">
+            <button
+              th:if="${usuario != null && !desafio.participantes?.contains(usuario)}"
+              th:data-desafio-id="${desafio.id}"
+              class="btn-participar"
+            >
+              Participar
+            </button>
+            <button
+              th:if="${usuario != null && desafio.participantes?.contains(usuario) && !desafio.usuariosCompletados?.contains(usuario)}"
+              th:data-desafio-id="${desafio.id}"
+              class="btn-completar"
+            >
+              Completar
+            </button>
+            <span
+              th:if="${usuario != null && desafio.usuariosCompletados?.contains(usuario)}"
+              class="completado"
+            >
+              ¡Completado!
+            </span>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script th:inline="javascript">
+      const usuarioId = /*[[${usuario?.id}]]*/ null;
+      let stompClient = null;
+
+      function conectarWebSocket() {
+        console.log("Iniciando conexión WebSocket...");
+        const socket = new SockJS("/ws-proyectos");
+        stompClient = Stomp.over(socket);
+
+        // Configuración para ver logs de debug
+        stompClient.debug = function (str) {
+          console.log(str);
+        };
+
+        stompClient.connect(
+          {},
+          function (frame) {
+            console.log("Conectado: " + frame);
+
+            // Suscribirse al topic de desafíos
+            stompClient.subscribe("/topic/desafios", function (message) {
+              try {
+                const data = JSON.parse(message.body);
+                console.log("Mensaje WebSocket recibido:", data);
+                actualizarDesafios(data);
+              } catch (error) {
+                console.error("Error procesando mensaje:", error);
+              }
+            });
+          },
+          function (error) {
+            console.error("Error de conexión WebSocket:", error);
+            // Reintentar conexión después de 5 segundos
+            setTimeout(conectarWebSocket, 5000);
+          }
+        );
+      }
+
+      function actualizarDesafios(data) {
+        const desafiosGrid = document.querySelector(".desafios-grid");
+
+        if (!desafiosGrid) {
+          console.error("No se encontró el contenedor de desafíos");
+          return;
+        }
+
+        console.log("Actualizando desafíos con datos:", data);
+
+        if (data.tipo === "NUEVO_DESAFIO") {
+          const desafioId = data.desafio.id;
+          // Verificar si ya existe
+          if (!document.querySelector(`[data-desafio-id="${desafioId}"]`)) {
+            console.log("Creando nueva tarjeta para desafío:", desafioId);
+
+            // Si no hay desafíos, limpiar el mensaje de "no hay desafíos"
+            const mensajeVacio = desafiosGrid.querySelector("p");
+            if (
+              mensajeVacio &&
+              mensajeVacio.textContent.includes("No hay desafíos")
+            ) {
+              mensajeVacio.remove();
+            }
+
+            const nuevaTarjeta = crearTarjetaDesafio(data.desafio);
+            desafiosGrid.insertAdjacentHTML("afterbegin", nuevaTarjeta);
+            inicializarBotonesNuevaTarjeta(desafioId);
+          }
+        } else if (data.tipo === "ELIMINAR_DESAFIO") {
+          console.log("Eliminando desafío:", data.desafioId);
+          const tarjetaExistente = document.querySelector(
+            `[data-desafio-id="${data.desafioId}"]`
+          );
+
+          if (tarjetaExistente) {
+            tarjetaExistente.remove();
+            console.log("Tarjeta eliminada correctamente");
+
+            // Verificar si no quedan desafíos
+            if (desafiosGrid.children.length === 0) {
+              desafiosGrid.innerHTML =
+                "<div><p>No hay desafíos activos disponibles en este momento.</p></div>";
+            }
+          }
+        }
+      }
+
+      function inicializarBotonesNuevaTarjeta(desafioId) {
+        // Inicializar botón participar
+        const btnParticipar = document.querySelector(
+          `.btn-participar[data-desafio-id="${desafioId}"]`
+        );
+        if (btnParticipar) {
+          btnParticipar.addEventListener("click", function () {
+            participarEnDesafio(desafioId);
+          });
+        }
+
+        // Inicializar botón completar
+        const btnCompletar = document.querySelector(
+          `.btn-completar[data-desafio-id="${desafioId}"]`
+        );
+        if (btnCompletar) {
+          btnCompletar.addEventListener("click", function () {
+            completarDesafio(desafioId);
+          });
+        }
+      }
+
+      function crearTarjetaDesafio(desafio) {
+        console.log("Creando tarjeta con datos:", desafio);
+
+        const fechaInicio = new Date(desafio.fechaInicio).toLocaleString(
+          "es-ES"
+        );
+        const fechaFin = new Date(desafio.fechaFin).toLocaleString("es-ES");
+
+        let botonesHtml = "";
+        if (usuarioId) {
+          if (
+            !desafio.participantes ||
+            !desafio.participantes.includes(usuarioId)
+          ) {
+            botonesHtml = `<button class="btn-participar" data-desafio-id="${desafio.id}">Participar</button>`;
+          } else if (
+            !desafio.usuariosCompletados ||
+            !desafio.usuariosCompletados.includes(usuarioId)
+          ) {
+            botonesHtml = `<button class="btn-completar" data-desafio-id="${desafio.id}">Completar</button>`;
+          } else {
+            botonesHtml = `<span class="completado">¡Completado!</span>`;
+          }
+        }
+
+        return `
+                <div class="desafio-card" data-desafio-id="${desafio.id}">
+                    <div class="desafio-header">
+                        <h2>${
+                          desafio.tipoDesafio?.descripcion ||
+                          desafio.tipoDesafio
+                        }</h2>
+                        <span class="puntos">${
+                          desafio.puntosRecompensa
+                        } pts</span>
+                    </div>
+                    <div class="desafio-content">
+                        <p>${
+                          desafio.tipoDesafio === "PUBLICAR_FORO" ||
+                          desafio.tipoDesafio?.name === "PUBLICAR_FORO"
+                            ? "Publica un mensaje en el foro para completar este desafío"
+                            : "Únete al proyecto para completar este desafío"
+                        }</p>
+                        <div class="desafio-info">
+                            <div class="fecha">
+                                <span>Inicio: ${fechaInicio}</span>
+                            </div>
+                            <div class="fecha">
+                                <span>Fin: ${fechaFin}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="desafio-actions">
+                        ${botonesHtml}
+                    </div>
+                </div>
+            `;
+      }
+
+      // Inicializar la conexión cuando el documento esté listo
+      document.addEventListener("DOMContentLoaded", function () {
+        console.log("Documento cargado, iniciando WebSocket...");
+        conectarWebSocket();
+
+        // Inicializar botones existentes
+        document.querySelectorAll(".btn-participar").forEach((btn) => {
+          btn.addEventListener("click", function () {
+            const desafioId = this.getAttribute("data-desafio-id");
+            participarEnDesafio(desafioId);
+          });
+        });
+
+        document.querySelectorAll(".btn-completar").forEach((btn) => {
+          btn.addEventListener("click", function () {
+            const desafioId = this.getAttribute("data-desafio-id");
+            completarDesafio(desafioId);
+          });
+        });
+
+        // Funcionalidad del menú hamburguesa
+        const menuToggle = document.querySelector(".menu-toggle");
+        const navbarUl = document.querySelector(".navbar ul");
+
+        menuToggle.addEventListener("click", function () {
+          navbarUl.classList.toggle("active");
+          // Opcional: Cambiar el ícono del botón
+          this.textContent = navbarUl.classList.contains("active") ? "✕" : "☰";
+        });
+
+        // Cerrar el menú al hacer clic fuera
+        document.addEventListener("click", function (e) {
+          if (!navbarUl.contains(e.target) && !menuToggle.contains(e.target)) {
+            navbarUl.classList.remove("active");
+            menuToggle.textContent = "☰";
+          }
+        });
+
+        // Cerrar el menú al hacer clic en un enlace
+        navbarUl.querySelectorAll("a").forEach((link) => {
+          link.addEventListener("click", () => {
+            navbarUl.classList.remove("active");
+            menuToggle.textContent = "☰";
+          });
+        });
+      });
+
+      function participarEnDesafio(desafioId) {
+        if (!usuarioId) {
+          alert("Debes iniciar sesión para participar");
+          return;
+        }
+
+        fetch(`/desafios/${desafioId}/participar`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+          body: `usuarioId=${usuarioId}`,
+        })
+          .then((response) => response.text())
+          .then((mensaje) => {
+            alert(mensaje);
+            if (mensaje.includes("exitosamente")) {
+              location.reload();
+            }
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+            alert("Ocurrió un error al intentar participar en el desafío");
+          });
+      }
+
+      function completarDesafio(desafioId) {
+        if (!usuarioId) {
+          alert("Debes iniciar sesión para completar el desafío");
+          return;
+        }
+
+        fetch(`/desafios/${desafioId}/completar`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+          body: `usuarioId=${usuarioId}`,
+        })
+          .then((response) => response.text())
+          .then((mensaje) => {
+            alert(mensaje);
+            if (mensaje.includes("Felicitaciones")) {
+              location.reload();
+            }
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+            alert("Ocurrió un error al intentar completar el desafío");
+          });
+      }
+    </script>
+  </body>
+</html>

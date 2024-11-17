@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Impulsa el cambio - Ranking</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Limelight&family=Literata:ital,opsz,wght@0,7..72,200..900;1,7..72,200..900&family=Luckiest+Guy&family=Lusitana:wght@400;700&family=Mitr:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Limelight&family=Literata:ital,opsz,wght@0,7..72,200..900;1,7..72,200..900&family=Luckiest+Guy&family=Lusitana:wght@400;700&family=Mitr:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/ranking.css">
+</head>
+<body>
+<header class="header">
+    <div class="logo">
+        <img src="/Imagenes/Logo.png" alt="Logo" class="Logo">
+    </div>
+    <h1 class="IMPULSA-EL-CAMBIO">IMPULSA EL CAMBIO</h1>
+</header>
+
+<nav class="navbar">
+    <ul>
+        <li><a href="/inicioVoluntario">Inicio</a></li>
+        <li><a href="/foro">Foro</a></li>
+        <li><a href="/proyectos">Proyectos</a></li>
+        <li><a href="/ranking">Ranking</a></li>
+        <li><a href="/desafios-semanales">Desafíos Semanales</a></li>
+        <li><a href="/Perfil">Perfil</a></li>
+        <li><a href="/cerrarSesion">Cerrar Sesión</a></li>
+    </ul>
+</nav>
+<body>
+    <div class="container">
+        <h1>Ranking de Voluntarios</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Posición</th>
+                    <th>Nombre</th>
+                    <th>Puntos</th>
+                    <th>Insignias</th>
+                    <th>Proyectos Completados</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="usuario, iterStat : ${topUsuarios}">
+                    <td><span class="position" th:text="${iterStat.count}">1</span></td>
+                    <td th:text="${usuario.nombre}">Nombre del Usuario</td>
+                    <td th:text="${usuario.puntos}">100</td>
+                    <td class="insignias-container">
+                        <th:block th:each="insignia : ${#strings.arraySplit(usuario.insignias, ',')}">
+                            <img th:src="@{'/Imagenes/Insignias/' + ${#strings.trim(insignia)} + '.png'}" 
+                                 th:alt="${insignia}" 
+                                 class="insignia-img">
+                        </th:block>
+                    </td>
+                    <td th:text="${usuario.proyectosCompletados}">5</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

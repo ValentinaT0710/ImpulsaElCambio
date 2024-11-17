@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Impulsa el cambio - Foro</title>
+    <link rel="stylesheet" type="text/css" href="/foro.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Limelight&family=Literata:ital,opsz,wght@0,7..72,200..900;1,7..72,200..900&family=Luckiest+Guy&family=Lusitana:wght@400;700&family=Mitr:wght@200;300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <header class="header">
+      <div class="logo">
+        <img src="/Imagenes/Logo.png" alt="Logo" class="Logo" />
+      </div>
+      <h1 class="IMPULSA-EL-CAMBIO">IMPULSA EL CAMBIO</h1>
+      <button class="menu-mobile" id="menuButton" aria-label="Menu">
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+      </button>
+    </header>
+
+    <nav class="main-nav">
+      <ul class="menu-horizontal" id="mainMenu">
+        <li>
+          <a href="/inicioVoluntario">
+            <i class="fas fa-home" style="color: #ffd43b"></i> Inicio
+          </a>
+        </li>
+        <li>
+          <a href="/foro">
+            <i class="fas fa-comments" style="color: #69ff3b"></i> Foro
+          </a>
+        </li>
+        <li>
+          <a href="/proyectos">
+            <i class="fas fa-project-diagram" style="color: #558afd"></i>
+            Proyectos
+          </a>
+        </li>
+        <li>
+          <a href="/DesafioVoluntario">
+            <i class="fas fa-trophy" style="color: #ff3bad"></i> Desafíos
+          </a>
+        </li>
+        <li>
+          <a href="/Perfil">
+            <i class="fas fa-id-card" style="color: #ff3b45"></i> Perfil
+          </a>
+        </li>
+        <li>
+          <a href="/cerrarSesion">
+            <i class="fas fa-sign-out-alt" style="color: #3bffef"></i> Cerrar
+            Sesión
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <!-- Área para crear nuevos comentarios -->
+    <div class="contenedor-principal">
+      <!-- Contenedor de comentarios existentes primero -->
+      <div class="comentarios-container">
+        <div
+          th:each="comentario : ${comentarios}"
+          class="comentario-container"
+          th:id="'comentario-' + ${comentario.id}"
+        >
+          <div class="usuario-info">
+            <img
+              th:src="${comentario.usuario.imagenPerfil ?: '/Imagenes/ImagenPredeterminada.jpg'}"
+              alt="Foto de perfil"
+              class="usuario-avatar"
+            />
+            <div class="info-wrapper">
+              <span
+                class="usuario-nombre"
+                th:text="${comentario.usuario.nombre}"
+                >Usuario</span
+              >
+              <span
+                class="fecha"
+                th:text="${#temporals.format(comentario.fechaCreacion, 'dd/MM/yyyy HH:mm')}"
+                >Fecha</span
+              >
+            </div>
+          </div>
+
+          <p class="comentario-contenido" th:text="${comentario.contenido}">
+            Contenido
+          </p>
+
+          <div class="comentario-acciones">
+            <button
+              class="btn-me-encanta"
+              th:onclick="'toggleMeEncanta(' + ${comentario.id} + ')'"
+            >
+              <i
+                class="fas fa-heart"
+                th:classappend="${comentario.meEncanta.contains(usuarioActual)} ? 'activo' : ''"
+              ></i>
+              <span
+                class="contador-me-encanta"
+                th:text="${comentario.contadorMeEncanta}"
+                >0</span
+              >
+            </button>
+
+            <button
+              class="btn-responder"
+              th:onclick="'mostrarFormularioRespuesta(' + ${comentario.id} + ')'"
+            >
+              <i class="fas fa-reply"></i> Responder
+            </button>
+
+            <!-- Botón de eliminar para comentarios principales -->
+            <button
+              th:if="${comentario.usuario.id == session.usuarioId}"
+              class="btn-eliminar"
+              th:onclick="'eliminarComentario(' + ${comentario.id} + ')'"
+            >
+              <i class="fas fa-trash"></i>
+            </button>
+          </div>
+
+          <!-- Formulario de respuesta -->
+          <div
+            th:id="'form-respuesta-' + ${comentario.id}"
+            class="formulario-respuesta"
+            style="display: none"
+          >
+            <textarea
+              class="texto-respuesta"
+              placeholder="Escribe tu respuesta..."
+            ></textarea>
+            <button
+              class="btn-enviar"
+              th:onclick="'enviarRespuesta(' + ${comentario.id} + ')'"
+            >
+              Enviar
+            </button>
+          </div>
+
+          <!-- Respuestas -->
+          <div class="respuestas-wrapper">
+            <button
+              class="btn-toggle-respuestas"
+              onclick="toggleRespuestas(this)"
+            >
+              Ver respuestas (<span
+                th:text="${#lists.size(comentario.respuestas)}"
+                >0</span
+              >)
+            </button>
+            <div class="respuestas" style="display: none">
+              <!-- Contenedor para las respuestas existentes y nuevas -->
+              <div class="respuestas-contenedor">
+                <div
+                  th:each="respuesta : ${comentario.respuestas}"
+                  class="respuesta"
+                  th:id="'respuesta-' + ${respuesta.id}"
+                >
+                  <div class="usuario-info">
+                    <img
+                      th:src="${respuesta.usuario.imagenPerfil ?: '/Imagenes/ImagenPredeterminada.jpg'}"
+                      alt="Foto de perfil"
+                      class="usuario-avatar-pequeño"
+                    />
+                    <span
+                      class="usuario-nombre"
+                      th:text="${respuesta.usuario.nombre}"
+                      >Usuario</span
+                    >
+                  </div>
+                  <p
+                    class="comentario-contenido"
+                    th:text="${respuesta.contenido}"
+                  >
+                    Respuesta
+                  </p>
+                  <div class="respuesta-acciones">
+                    <button
+                      class="btn-eliminar"
+                      th:onclick="'eliminarComentario(' + ${respuesta.id} + ')'"
+                    >
+                      <i class="fas fa-trash"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Indicador de carga -->
+        <div class="loading-spinner">
+          <i class="fas fa-spinner"></i> Cargando más comentarios...
+        </div>
+      </div>
+      <div class="foroEditable">
+        <div class="usuarioInfo">
+          <div class="foto">
+            <img
+              th:if="${usuarioActual != null and usuarioActual.imagenPerfil != null}"
+              th:src="@{${usuarioActual.imagenPerfil}}"
+              alt="Tu foto de perfil"
+              id="userProfileImage"
+            />
+            <img
+              th:unless="${usuarioActual != null and usuarioActual.imagenPerfil != null}"
+              src="/Imagenes/ImagenPredeterminada.jpg"
+              alt="Foto predeterminada"
+              id="userDefaultImage"
+            />
+          </div>
+          <div class="nombreUsuario">
+            <span
+              th:text="${usuarioActual != null ? usuarioActual.nombre : 'Usuario'}"
+              id="currentUserName"
+              >Usuario</span
+            >
+          </div>
+        </div>
+        <textarea
+          id="nuevoComentario"
+          placeholder="Escribe tu comentario aquí..."
+        ></textarea>
+        <button class="btn-publicar" onclick="publicarComentario()">
+          Publicar
+        </button>
+      </div>
+    </div>
+
+    <script th:inline="javascript">
+      const currentUserId = /*[[${usuarioId}]]*/ null;
+      const adminUser = /*[[${isAdmin}]]*/ false;
+      const currentUserName =
+        /*[[${session.usuario != null ? session.usuario.nombre : 'Usuario'}]]*/ "Usuario";
+      const currentUserImage =
+        /*[[${session.usuario != null and session.usuario.imagenPerfil != null} ? @{${session.usuario.imagenPerfil}} : @{/Imagenes/ImagenPredeterminada.jpg}]]*/ "/Imagenes/ImagenPredeterminada.jpg";
+
+      function publicarComentario() {
+        const comentarioTexto =
+          document.getElementById("nuevoComentario").value;
+        if (!comentarioTexto.trim()) return;
+
+        fetch("/foro/publicar", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-CSRF-TOKEN":
+              document.querySelector('meta[name="_csrf"]').content,
+          },
+          body: JSON.stringify({
+            contenido: comentarioTexto,
+          }),
+        })
+          .then((response) => {
+            if (!response.ok)
+              throw new Error("Error en la respuesta del servidor");
+            document.getElementById("nuevoComentario").value = "";
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+            alert("Error al publicar el comentario: " + error.message);
+          });
+      }
+
+      function crearElementoComentario(comentario) {
+        const div = document.createElement("div");
+        div.className = "foroPredeterminado";
+        div.id = "foro-" + comentario.id;
+
+        const imagenPerfil =
+          comentario.imagenPerfil || "/Imagenes/ImagenPredeterminada.jpg";
+
+        div.innerHTML = `
+                    <div class="usuarioInfo">
+                        <div class="foto">
+                            <img src="${imagenPerfil}" alt="Foto de usuario">
+                        </div>
+                        <div class="nombreUsuarioConInsignias">
+                            <span class="nombreUsuario">${
+                              comentario.usuarioNombre || "Usuario Desconocido"
+                            }</span>
+                            <div class="insignias">
+                                ${mostrarInsignias(comentario.insignias)}
+                            </div>
+                        </div>
+                    </div>
+                    <p class="descripcion">${comentario.contenido}</p>
+                    <div class="botonesAccion">
+                        <button class="editarComentario" onclick="editarComentario(${
+                          comentario.id
+                        })">Editar</button>
+                        <button class="borrarComentario" onclick="borrarComentario(${
+                          comentario.id
+                        })">Borrar</button>
+                    </div>
+                `;
+
+        return div;
+      }
+
+      function mostrarInsignias(insignias) {
+        if (!insignias || insignias.length === 0) return "";
+
+        return insignias
+          .map(
+            (insignia) => `
+                    <span class="insignia">
+                        <img src="/Imagenes/Insignias/${insignia}.png" alt="${insignia}" class="insignia-img">
+                    </span>
+                `
+          )
+          .join("");
+      }
+
+      function puedeEditarBorrar(usuarioId) {
+        return adminUser || currentUserId === usuarioId;
+      }
+
+      function borrarComentario(id) {
+        if (confirm("¿Estás seguro de que quieres borrar este comentario?")) {
+          fetch(`/foro/borrarComentario/${id}`, {
+            method: "DELETE",
+          })
+            .then((response) => {
+              if (response.ok) {
+                const comentario = document.getElementById("foro-" + id);
+                comentario.remove();
+              } else {
+                throw new Error("Error al borrar el comentario");
+              }
+            })
+            .catch((error) => {
+              console.error("Error:", error);
+              alert(error.message);
+            });
+        }
+      }
+
+      function editarComentario(id) {
+        const comentario = document.getElementById("foro-" + id);
+        const descripcion = comentario.querySelector(".descripcion");
+        const textoActual = descripcion.textContent;
+
+        const nuevoTexto = prompt("Editar comentario:", textoActual);
+
+        if (nuevoTexto !== null && nuevoTexto !== textoActual) {
+          fetch(`/foro/editarComentario/${id}`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(nuevoTexto),
+          })
+            .then((response) => {
+              if (response.ok) {
+                return response.text();
+              } else {
+                throw new Error("Error al editar el comentario");
+              }
+            })
+            .then((message) => {
+              alert(message);
+              descripcion.textContent = nuevoTexto;
+            })
+            .catch((error) => {
+              console.error("Error:", error);
+              alert(error.message);
+            });
+        }
+      }
+
+      function mostrarComentario(comentario) {
+        let html = `
+                    <div class="comentario" data-id="${comentario.id}">
+                        <img src="${
+                          comentario.imagenPerfil ||
+                          "/Imagenes/ImagenPredeterminada.jpg"
+                        }" alt="Imagen de perfil" class="imagen-perfil">
+                        <div class="contenido-comentario">
+                            <h3>${comentario.usuarioNombre}</h3>
+                            <p>${comentario.contenido}</p>
+                            <span class="fecha">${new Date(
+                              comentario.fechaCreacion
+                            ).toLocaleString()}</span>
+                            ${mostrarMedallas(comentario.insignias)}
+                        </div>
+                        <!-- ... otros elementos del comentario ... -->
+                    </div>
+                `;
+        $("#comentarios").append(html);
+      }
+
+      function mostrarMedallas(insignias) {
+        if (!insignias || insignias.length === 0) return "";
+
+        let medallasHtml = insignias
+          .map((insignia) => `<div class="medal ${insignia}"></div>`)
+          .join("");
+        return `<div class="medallas">${medallasHtml}</div>`;
+      }
+    </script>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const menuButton = document.getElementById("menuButton");
+        const mainMenu = document.getElementById("mainMenu");
+
+        menuButton.addEventListener("click", function () {
+          menuButton.classList.toggle("active");
+          mainMenu.classList.toggle("active");
+        });
+      });
+    </script>
+
+    <script>
+      function toggleMeEncanta(comentarioId) {
+        fetch(`/foro/me-encanta/${comentarioId}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-CSRF-TOKEN":
+              document.querySelector('meta[name="_csrf"]').content,
+          },
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            const contadorElement = document.querySelector(
+              `#comentario-${comentarioId} .contador-me-encanta`
+            );
+            const iconoElement = document.querySelector(
+              `#comentario-${comentarioId} .fa-heart`
+            );
+
+            if (contadorElement && iconoElement) {
+              contadorElement.textContent = data.contadorMeEncanta;
+              iconoElement.classList.toggle("activo", data.meEncantaActivo);
+            }
+          })
+          .catch((error) => console.error("Error:", error));
+      }
+
+      function mostrarFormularioRespuesta(comentarioId) {
+        const formRespuesta = document.getElementById(
+          `form-respuesta-${comentarioId}`
+        );
+        formRespuesta.style.display =
+          formRespuesta.style.display === "none" ? "block" : "none";
+      }
+
+      function enviarRespuesta(comentarioId) {
+        const formRespuesta = document.querySelector(
+          `#form-respuesta-${comentarioId}`
+        );
+        const textarea = formRespuesta.querySelector(".texto-respuesta");
+        const contenido = textarea.value.trim();
+
+        if (!contenido) return;
+
+        fetch("/foro/responder", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-CSRF-TOKEN":
+              document.querySelector('meta[name="_csrf"]').content,
+          },
+          body: JSON.stringify({
+            comentarioPadreId: comentarioId,
+            contenido: contenido,
+          }),
+        })
+          .then((response) => {
+            if (!response.ok)
+              throw new Error("Error en la respuesta del servidor");
+            return response.json();
+          })
+          .then((respuesta) => {
+            // La respuesta se manejará a través del WebSocket
+            textarea.value = "";
+            formRespuesta.style.display = "none";
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+            alert("Error al enviar la respuesta");
+          });
+      }
+
+      function toggleRespuestas(button) {
+        const respuestasDiv = button.nextElementSibling;
+        respuestasDiv.style.display =
+          respuestasDiv.style.display === "none" ? "block" : "none";
+      }
+
+      function crearElementoRespuesta(respuesta) {
+        const fecha = new Date(respuesta.fechaCreacion).toLocaleString();
+        const imagenPerfil =
+          respuesta.usuario && respuesta.usuario.imagenPerfil
+            ? respuesta.usuario.imagenPerfil
+            : "/Imagenes/ImagenPredeterminada.jpg";
+        const nombreUsuario = respuesta.usuario
+          ? respuesta.usuario.nombre
+          : "Usuario";
+
+        return `
+                <div class="respuesta" id="respuesta-${respuesta.id}">
+                    <div class="usuario-info">
+                        <img src="${imagenPerfil}" 
+                            alt="Foto de perfil" class="usuario-avatar-pequeño">
+                        <div class="info-wrapper">
+                            <span class="usuario-nombre">${nombreUsuario}</span>
+                            <span class="fecha">${fecha}</span>
+                        </div>
+                    </div>
+                    <p class="comentario-contenido">${respuesta.contenido}</p>
+                    <div class="respuesta-acciones">
+                        ${
+                          respuesta.usuario &&
+                          respuesta.usuario.id === currentUserId
+                            ? `
+                            <button class="btn-eliminar" onclick="eliminarComentario(${respuesta.id})">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        `
+                            : ""
+                        }
+                    </div>
+                </div>
+            `;
+      }
+    </script>
+
+    <script>
+      function eliminarComentario(comentarioId) {
+        if (!confirm("¿Estás seguro de que deseas eliminar este comentario?")) {
+          return;
+        }
+
+        const token = document.querySelector('meta[name="_csrf"]').content;
+
+        fetch(`/foro/eliminarComentario/${comentarioId}`, {
+          method: "DELETE",
+          headers: {
+            "X-CSRF-TOKEN": token,
+          },
+        })
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("Error al eliminar el comentario");
+            }
+            const comentario = document.getElementById(
+              `comentario-${comentarioId}`
+            );
+            if (comentario) {
+              comentario.remove();
+            }
+            const respuesta = document.getElementById(
+              `respuesta-${comentarioId}`
+            );
+            if (respuesta) {
+              const comentarioPadre = respuesta.closest(
+                ".comentario-container"
+              );
+              const contadorElement = comentarioPadre.querySelector(
+                ".btn-toggle-respuestas span"
+              );
+              if (contadorElement) {
+                const nuevoContador =
+                  parseInt(contadorElement.textContent || "0") - 1;
+                contadorElement.textContent = nuevoContador;
+              }
+              respuesta.remove();
+            }
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+            alert("Error al eliminar el comentario");
+          });
+      }
+    </script>
+
+    <script>
+      let pagina = 1;
+      let cargando = false;
+      let hayMasComentarios = true;
+      const comentariosPorPagina = 10;
+
+      function cargarMasComentarios() {
+        if (cargando || !hayMasComentarios) return;
+
+        cargando = true;
+        const spinner = document.querySelector(".loading-spinner");
+        if (spinner) spinner.style.display = "block";
+
+        fetch(
+          `/foro/cargarMas?pagina=${pagina}&cantidad=${comentariosPorPagina}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              "X-CSRF-TOKEN":
+                document.querySelector('meta[name="_csrf"]').content,
+            },
+          }
+        )
+          .then((response) => {
+            if (!response.ok)
+              throw new Error("Error en la respuesta del servidor");
+            return response.json();
+          })
+          .then((data) => {
+            if (data.comentarios && data.comentarios.length > 0) {
+              const contenedor = document.querySelector(
+                ".comentarios-container"
+              );
+              data.comentarios.forEach((comentario) => {
+                const nuevoComentarioHTML = crearHTMLComentario(comentario);
+                contenedor.insertAdjacentHTML("beforeend", nuevoComentarioHTML);
+              });
+              pagina++;
+
+              if (data.comentarios.length < comentariosPorPagina) {
+                hayMasComentarios = false;
+                if (spinner) spinner.style.display = "none";
+              }
+            } else {
+              hayMasComentarios = false;
+              if (spinner) spinner.style.display = "none";
+            }
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          })
+          .finally(() => {
+            cargando = false;
+            if (hayMasComentarios) {
+              if (spinner) spinner.style.display = "none";
+            } else {
+              if (spinner) {
+                spinner.textContent = "No hay más comentarios";
+                setTimeout(() => {
+                  spinner.style.display = "none";
+                }, 2000);
+              }
+            }
+          });
+      }
+
+      function optimizedScroll(element, callback) {
+        let ticking = false;
+
+        element.addEventListener("scroll", function () {
+          if (!ticking) {
+            window.requestAnimationFrame(function () {
+              callback();
+              ticking = false;
+            });
+            ticking = true;
+          }
+        });
+      }
+
+      // Uso
+      optimizedScroll(
+        document.querySelector(".comentarios-container"),
+        function () {
+          if (!hayMasComentarios) return;
+
+          const container = document.querySelector(".comentarios-container");
+          const { scrollTop, scrollHeight, clientHeight } = container;
+
+          if (!cargando && scrollHeight - scrollTop <= clientHeight + 100) {
+            cargarMasComentarios();
+          }
+        }
+      );
+
+      function crearHTMLComentario(comentario) {
+        return `
+            <div class="comentario-container" id="comentario-${comentario.id}">
+                <div class="usuario-info">
+                    <img src="${
+                      comentario.usuario.imagenPerfil ||
+                      "/Imagenes/ImagenPredeterminada.jpg"
+                    }" 
+                        alt="Foto de perfil" class="usuario-avatar">
+                    <div class="info-wrapper">
+                        <span class="usuario-nombre">${
+                          comentario.usuario.nombre
+                        }</span>
+                        <span class="fecha">${new Date(
+                          comentario.fechaCreacion
+                        ).toLocaleString()}</span>
+                    </div>
+                </div>
+                <p class="comentario-contenido">${comentario.contenido}</p>
+                <div class="comentario-acciones">
+                    <button class="btn-me-encanta" onclick="toggleMeEncanta(${
+                      comentario.id
+                    })">
+                        <i class="fas fa-heart"></i>
+                        <span class="contador-me-encanta">0</span>
+                    </button>
+                    <button class="btn-responder" onclick="mostrarFormularioRespuesta(${
+                      comentario.id
+                    })">
+                        <i class="fas fa-reply"></i> Responder
+                    </button>
+                    ${
+                      comentario.usuario.id === currentUserId
+                        ? `
+                        <button class="btn-eliminar" onclick="eliminarComentario(${comentario.id})">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    `
+                        : ""
+                    }
+                </div>
+                <div id="form-respuesta-${
+                  comentario.id
+                }" class="formulario-respuesta" style="display: none;">
+                    <textarea class="texto-respuesta" placeholder="Escribe tu respuesta..."></textarea>
+                    <button class="btn-enviar" onclick="enviarRespuesta(${
+                      comentario.id
+                    })">Enviar</button>
+                </div>
+                <div class="respuestas-wrapper">
+                    <button class="btn-toggle-respuestas" onclick="toggleRespuestas(this)">
+                        Ver respuestas (<span>0</span>)
+                    </button>
+                    <div class="respuestas" style="display: none;">
+                        <div class="respuestas-contenedor">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            `;
+      }
+
+      // Cuando se publica un nuevo comentario, agregarlo al principio y hacer scroll
+      function publicarComentario() {
+        const comentarioTexto =
+          document.getElementById("nuevoComentario").value;
+        if (!comentarioTexto.trim()) return;
+
+        fetch("/foro/publicar", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-CSRF-TOKEN":
+              document.querySelector('meta[name="_csrf"]').content,
+          },
+          body: JSON.stringify({
+            contenido: comentarioTexto,
+          }),
+        })
+          .then((response) => {
+            if (!response.ok)
+              throw new Error("Error en la respuesta del servidor");
+            document.getElementById("nuevoComentario").value = "";
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+            alert("Error al publicar el comentario: " + error.message);
+          });
+      }
+    </script>
+
+    <script>
+      let stompClient = null;
+
+      function conectarWebSocket() {
+        const socket = new SockJS("/ws-foro");
+        stompClient = Stomp.over(socket);
+
+        stompClient.connect({}, function (frame) {
+          console.log("Conectado a WebSocket");
+
+          // Suscribirse a nuevos comentarios
+          stompClient.subscribe("/topic/comentarios", function (mensaje) {
+            const comentario = JSON.parse(mensaje.body);
+            if (comentario.comentarioPadreId) {
+              // Es una respuesta
+              const respuestasContainer = document.querySelector(
+                `#comentario-${comentario.comentarioPadreId} .respuestas-contenedor`
+              );
+              if (respuestasContainer) {
+                const nuevoComentarioHTML = crearElementoRespuesta(comentario);
+                respuestasContainer.insertAdjacentHTML(
+                  "beforeend",
+                  nuevoComentarioHTML
+                );
+
+                // Actualizar contador de respuestas
+                const contadorElement = document.querySelector(
+                  `#comentario-${comentario.comentarioPadreId} .btn-toggle-respuestas span`
+                );
+                if (contadorElement) {
+                  const nuevoContador =
+                    parseInt(contadorElement.textContent || "0") + 1;
+                  contadorElement.textContent = nuevoContador;
+                }
+
+                // Mostrar las respuestas si están ocultas
+                const respuestasDiv =
+                  respuestasContainer.closest(".respuestas");
+                if (respuestasDiv && respuestasDiv.style.display === "none") {
+                  respuestasDiv.style.display = "block";
+                }
+              }
+            } else {
+              // Es un comentario principal
+              const nuevoComentarioHTML = crearHTMLComentario(comentario);
+              const contenedor = document.querySelector(
+                ".comentarios-container"
+              );
+              contenedor.insertAdjacentHTML("afterbegin", nuevoComentarioHTML);
+            }
+          });
+        });
+      }
+
+      // Llamar a esta función cuando se carga la página
+      document.addEventListener("DOMContentLoaded", conectarWebSocket);
+    </script>
+  </body>
+</html>

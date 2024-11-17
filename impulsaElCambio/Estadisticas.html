@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Estadísticas de Administrador - Impulsa el Cambio</title>
+    <link rel="stylesheet" href="/Estadisticasstyle.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Limelight&family=Literata:ital,opsz,wght@0,7..72,200..900;1,7..72,200..900&family=Luckiest+Guy&family=Lusitana:wght@400;700&family=Mitr:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+
+<body>
+    <header class="header">
+        <div class="logo">
+            <img src="/Imagenes/Logo.png" alt="Logo" class="Logo">
+        </div>
+        <h1 class="IMPULSA-EL-CAMBIO">IMPULSA EL CAMBIO</h1>
+        <button class="menu-mobile" aria-label="Menu">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </button>
+    </header>
+    <nav>
+        <ul class="menu-horizontal">
+            <li><a href="/admin/inicio"><i class="fas fa-home"></i> Inicio</a></li>
+            <li>
+                <a href="#"><i class="fas fa-project-diagram"></i> Proyectos <i class="fas fa-caret-down"></i></a>
+                <ul class="menu-vertical">
+                    <li><a href="/admin/proyectos"><i class="fas fa-list"></i> Ver Proyectos</a></li>
+                    <li><a href="/admin/desafios/crear"><i class="fas fa-flag"></i> Desafío</a></li>
+
+                </ul>
+            </li>
+            <li>
+                <a href="#"><i class="fas fa-users"></i> Voluntarios <i class="fas fa-caret-down"></i></a>
+                <ul class="menu-vertical">
+                    <li><a href="/Graficas"><i class="fas fa-chart-line"></i> Ver Graficas</a></li>
+                    <li><a href="/admin/Estadisticas"><i class="fas fa-chart-bar"></i> Estadísticas</a></li>
+                    <li><a href="/admin/ManejoUser"><i class="fas fa-user-plus"></i> Registro</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="#"><i class="fas fa-comments"></i> Foro <i class="fas fa-caret-down"></i></a>
+                <ul class="menu-vertical">
+                    <li><a href="/admin/foroAdmin"><i class="fas fa-comment-dots"></i> Ver Publicaciones</a></li>
+
+                </ul>
+            </li>
+            <li>
+                <a href="#"><i class="fas fa-user"></i> Mi Cuenta <i class="fas fa-caret-down"></i></a>
+                <ul class="menu-vertical">
+                    <li><a href="/PerfilAdmin"><i class="fas fa-id-card"></i> Perfil</a></li>
+                    <li><a href="#"><i class="fas fa-cog"></i> Configuración</a></li>
+                    <li><a href="/admin/cerrarSesion"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a></li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+    <div class="overlay"></div>
+    <main>
+        <h1>Panel de Estadísticas del Administrador</h1>
+        <div class="estadisticas-container">
+            <div th:each="proyecto : ${proyectos}" class="proyecto-estadisticas">
+                <h2 th:text="${proyecto.nombre}"></h2>
+                <p th:text="'Fecha de creación: ' + ${#temporals.format(proyecto.fechaCreacion, 'dd-MM-yyyy HH:mm')}"></p>
+                <p th:text="'Número de participantes: ' + ${proyecto.numeroParticipantes}"></p>
+                <button class="ver-participantes" th:data-id="${proyecto.id}">Ver Detalles de Participantes</button>
+            </div>
+        </div>
+
+        <h2>Resumen Estadístico para Administradores</h2>
+
+        <div class="stats-container">
+            <div class="stat-card">
+                <div class="stat-number" th:text="${usuariosRegistrados}">0</div>
+                <div class="stat-label">Total de Usuarios Registrados</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" th:text="${proyectosActivos}">0</div>
+                <div class="stat-label">Proyectos Actualmente Activos</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" th:text="${participacionesForo}">0</div>
+                <div class="stat-label">Total de Participaciones en Foros</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" th:text="${voluntariosActivos}">0</div>
+                <div class="stat-label">Voluntarios Actualmente Activos</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" th:text="${proyectosExpirados}">0</div>
+                <div class="stat-label">Proyectos Expirados</div>
+            </div>
+        </div>
+
+        <div class="admin-panel">
+            <div class="panel-section">
+                <h4>Resumen de Proyectos</h4>
+                <div class="stat-group">
+                    <p>Proyectos Activos</p>
+                    <span class="stat-value" th:text="${proyectosActivos}">0</span>
+                </div>
+                <div class="stat-group">
+                    <p>Proyectos Expirados</p>
+                    <span class="stat-value" th:text="${proyectosExpirados}">0</span>
+                </div>
+                <div class="stat-group">
+                    <p>Voluntarios Asignados</p>
+                    <span class="stat-value" th:text="${voluntariosAsignados}">0</span>
+                </div>
+                <a href="/admin/proyectos" class="btn">Gestionar Proyectos</a>
+            </div>
+            <div class="panel-section">
+                <h4>Actividad del Foro</h4>
+                <div class="stat-group">
+                    <p>Nuevas Publicaciones</p>
+                    <span class="stat-value" th:text="${nuevasPublicaciones}">0</span>
+                </div>
+                <a href="/admin/foroAdmin" class="btn">Ver Foro</a>
+            </div>
+            <div class="panel-section">
+                <h4>Estadísticas de Voluntarios</h4>
+                <div class="stat-group">
+                    <p>Total de Voluntarios</p>
+                    <span class="stat-value" th:text="${totalVoluntarios}">0</span>
+                </div>
+                <div class="stat-group">
+                    <p>Nuevos esta semana</p>
+                    <span class="stat-value" th:text="${nuevosVoluntariosSemana}">0</span>
+                </div>
+                <a href="#" class="btn">Ver Detalles</a>
+            </div>
+            <div class="panel-section">
+                <h4>Tareas Pendientes</h4>
+                <ul>
+                    <li th:each="tarea : ${tareasPendientes}" th:text="${tarea}"></li>
+                </ul>
+            </div>
+        </div>
+
+        <h3>Análisis Detallado de Participación en Proyectos</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Nombre del Proyecto</th>
+                    <th>Número de Participantes</th>
+                    <th>Fecha de Inicio del Proyecto</th>
+                    <th>Estado Actual</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="proyecto : ${detallesProyectos}">
+                    <td th:text="${proyecto.nombre}"></td>
+                    <td th:text="${proyecto.participantes}"></td>
+                    <td th:text="${#temporals.format(proyecto.fechaInicio, 'dd-MM-yyyy')}"></td>
+                    <td th:text="${proyecto.estado}"></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Actividad Reciente en Foros (Últimas 5 Publicaciones)</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Título del Tema</th>
+                    <th>Autor de la Publicación</th>
+                    <th>Fecha y Hora de Publicación</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="post : ${ultimasPublicaciones}">
+                    <td th:text="${post.contenido}"></td>
+                    <td th:text="${post.usuario.nombre}"></td>
+                    <td th:text="${#temporals.format(post.fechaCreacion, 'dd-MM-yyyy HH:mm')}"></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Nuevas estadísticas de empresas y usuarios -->
+        <h2>Estadísticas de Empresas y Usuarios</h2>
+        <div class="stats-container empresa-stats">
+            <div class="stat-card">
+                <div class="stat-number" th:text="${#numbers.formatDecimal(promedioParticipacionEmpresa, 1, 1)}">0</div>
+                <div class="stat-label">Promedio de Participación por Empresa</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" th:if="${empresaConMasUsuarios != 'N/A'}" th:text="${empresaConMasUsuarios}"></div>
+                <div class="stat-number" th:if="${empresaConMasUsuarios == 'N/A'}" th:text="'Sin datos'"></div>
+                <div class="stat-label">Empresa(s) con Más Usuarios</div>
+            </div>
+
+            <!-- Empresas con más voluntarios en proyectos -->
+            <div class="stat-card empresas-voluntarios">
+                <h3>Empresas con Más Voluntarios en Proyectos</h3>
+                <div th:if="${not #lists.isEmpty(empresasConMasVoluntarios)}">
+                    <div th:each="empresa : ${empresasConMasVoluntarios}" class="empresa-voluntarios-item">
+                        <div class="stat-number" th:text="${empresa.cantidadVoluntariosEnProyectos}">0</div>
+                        <div class="stat-label" th:text="${empresa.empresa}">Nombre de la Empresa</div>
+                    </div>
+                </div>
+                <div th:if="${#lists.isEmpty(empresasConMasVoluntarios)}">
+                    <p th:text="${#lists.isEmpty(empresasConMasVoluntarios) ? 'No hay datos disponibles sobre empresas con voluntarios en proyectos.' : ''}"></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="empresa-detalles">
+            <h3>Desglose de Participación Empresarial</h3>
+            <table class="empresa-table">
+                <thead>
+                    <tr>
+                        <th>Empresa</th>
+                        <th>Usuarios Registrados</th>
+                        <th>Proyectos Activos</th>
+                        <th>Tasa de Participación</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="empresa : ${desgloseEmpresas}">
+                        <td th:text="${empresa.empresa}"></td>
+                        <td th:text="${empresa.usuariosRegistrados}"></td>
+                        <td th:text="${empresa.proyectosActivos}"></td>
+                        <td th:text="${#numbers.formatDecimal(empresa.tasaParticipacion, 1, 2) + '%'}"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </main>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuButton = document.querySelector('.menu-mobile');
+            const nav = document.querySelector('nav');
+            const menuHorizontal = document.querySelector('.menu-horizontal');
+            const overlay = document.querySelector('.overlay');
+            const menuItems = document.querySelectorAll('.menu-horizontal > li');
+
+            if (!overlay) {
+                console.warn('Overlay element not found');
+                return;
+            }
+
+            // Manejador del botón de menú móvil
+            menuButton.addEventListener('click', function() {
+                menuButton.classList.toggle('active');
+                nav.classList.toggle('active');
+                menuHorizontal.classList.toggle('active');
+                overlay.classList.toggle('active');
+                document.body.classList.toggle('no-scroll');
+            });
+
+            // Manejador para los elementos del menú
+            menuItems.forEach(item => {
+                const link = item.querySelector('a');
+                const submenu = item.querySelector('.menu-vertical');
+
+                if (submenu) {
+                    item.addEventListener('click', function(e) {
+                        if (window.innerWidth <= 768) {
+                            // Cerrar otros submenús abiertos
+                            menuItems.forEach(otherItem => {
+                                if (otherItem !== item && otherItem.classList.contains('active')) {
+                                    otherItem.classList.remove('active');
+                                }
+                            });
+
+                            // Alternar el estado del submenú actual
+                            item.classList.toggle('active');
+                        }
+                    });
+
+                    // Permitir que los enlaces del submenú funcionen normalmente
+                    submenu.querySelectorAll('a').forEach(subLink => {
+                        subLink.addEventListener('click', (e) => {
+                            e.stopPropagation();
+                        });
+                    });
+                }
+            });
+
+            // Cerrar menú al hacer clic en el overlay
+            overlay.addEventListener('click', function() {
+                menuButton.classList.remove('active');
+                nav.classList.remove('active');
+                menuHorizontal.classList.remove('active');
+                overlay.classList.remove('active');
+                document.body.classList.remove('no-scroll');
+
+                // Cerrar todos los submenús
+                menuItems.forEach(item => {
+                    item.classList.remove('active');
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>

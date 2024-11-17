@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Impulsa el cambio - Proyectos</title>
+    <link rel="stylesheet" href="/ProyectosAdmin.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Limelight&family=Literata:ital,opsz,wght@0,7..72,200..900;1,7..72,200..900&family=Luckiest+Guy&family=Lusitana:wght@400;700&family=Mitr:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+
+</head>
+
+<body>
+    <header class="header">
+        <div class="logo">
+            <img src="/Imagenes/Logo.png" alt="Logo" class="Logo">
+        </div>
+        <h1 class="IMPULSA-EL-CAMBIO">IMPULSA EL CAMBIO</h1>
+        <button class="menu-mobile" aria-label="Menu">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </button>
+    </header>
+    <nav>
+        <ul class="menu-horizontal">
+            <li><a href="/admin/inicio"><i class="fas fa-home"></i> Inicio</a></li>
+            <li>
+                <a href="#"><i class="fas fa-project-diagram"></i> Proyectos <i class="fas fa-caret-down"></i></a>
+                <ul class="menu-vertical">
+                    <li><a href="/admin/proyectos"><i class="fas fa-list"></i> Ver Proyectos</a></li>
+                    <li><a href="/admin/desafios/crear"><i class="fas fa-flag"></i> Desafío</a></li>
+
+                </ul>
+            </li>
+            <li>
+                <a href="#"><i class="fas fa-users"></i> Voluntarios <i class="fas fa-caret-down"></i></a>
+                <ul class="menu-vertical">
+                    <li><a href="/Graficas"><i class="fas fa-chart-line"></i> Ver Graficas</a></li>
+                    <li><a href="/admin/Estadisticas"><i class="fas fa-chart-bar"></i> Estadísticas</a></li>
+                    <li><a href="/admin/ManejoUser"><i class="fas fa-user-plus"></i> Registro</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="#"><i class="fas fa-comments"></i> Foro <i class="fas fa-caret-down"></i></a>
+                <ul class="menu-vertical">
+                    <li><a href="/admin/foroAdmin"><i class="fas fa-comment-dots"></i> Ver Publicaciones</a></li>
+
+                </ul>
+            </li>
+            <li>
+                <a href="#"><i class="fas fa-user"></i> Mi Cuenta <i class="fas fa-caret-down"></i></a>
+                <ul class="menu-vertical">
+                    <li><a href="/PerfilAdmin"><i class="fas fa-id-card"></i> Perfil</a></li>
+                    <li><a href="#"><i class="fas fa-cog"></i> Configuración</a></li>
+                    <li><a href="/admin/cerrarSesion"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a></li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+    <div class="overlay"></div>
+    <main>
+        <h2>Gestión de Proyectos</h2>
+        <button id="btnCrearProyecto" class="btn-crear"><i class="fas fa-plus"></i> Crear Proyecto</button>
+
+        <div id="formularioCreacion" style="display: none;">
+            <h3>Crear Nuevo Proyecto</h3>
+            <form id="formCrearProyecto" enctype="multipart/form-data" class="form-horizontal">
+                <input type="text" id="nombreProyecto" placeholder="Nombre del proyecto" required>
+                <textarea id="descripcionProyecto" placeholder="Descripción del proyecto" required></textarea>
+                <input type="datetime-local" id="fechaExpiracion" required>
+                <input type="file" id="imagenProyecto" accept="image/*" required>
+                <button type="submit">Guardar Proyecto</button>
+            </form>
+        </div>
+
+        <div class="proyectos-container">
+            <h2>Proyectos Activos</h2>
+            <div class="proyectos-activos">
+                <div th:each="proyecto : ${proyectosActivos}" class="Tarjeta" th:data-id="${proyecto.id}">
+                    <div class="Imagen">
+                        <img th:src="${proyecto.imagenUrl}" alt="Icono del proyecto">
+                    </div>
+                    <div class="tarjeta-contenido">
+                        <div class="proyectonombre" th:text="${proyecto.nombre}"></div>
+                        <div class="proyectodescripcion" th:text="${proyecto.descripcion}"></div>
+                        <div class="proyectofecha" th:text="'Creado: ' + ${#temporals.format(proyecto.fechaCreacion, 'dd-MM-yyyy')}"></div>
+                        <div class="proyectofechaExpiracion" th:text="'Expira: ' + ${#temporals.format(proyecto.fechaExpiracion, 'dd-MM-yyyy')}"></div>
+                        <div class="estadisticas">
+                            <div class="estadistica">
+                                <div class="estadistica-valor"><i class="fas fa-spinner fa-spin"></i> <span th:text="${proyecto.participantes.size()} + '%'"></span ></div>
+                                <div class="estadistica-etiqueta">Progreso</div>
+                            </div>
+                            <div class="estadistica">
+                                <div class="estadistica-valor"><i class="fas fa-users"></i> <span th:text="${proyecto.participantes.size()}"></span></div>
+                                <div class="estadistica-etiqueta">Participantes</div>
+                            </div>
+                            <div class="estadistica">
+                                <div class="estadistica-valor"><i class="fas fa-users"></i> <span th:text="${proyecto.participantes.size()}"></span></div>
+                                <div class="estadistica-etiqueta">Equipo</div>
+                            </div>
+                        </div>
+                        <div class="barra-progreso">
+                            <div class="progreso" th:attr="data-creacion=${proyecto.fechaCreacion}, data-expiracion=${proyecto.fechaExpiracion}"></div>
+                        </div>
+                    </div>
+                    <div class="estado estado-en-progreso"><i class="fas fa-spinner fa-spin"></i> En Progreso</div>
+                    <div class="tarjeta-acciones">
+                        <div class="menu-proyecto">
+                            <button class="menu-btn" aria-label="Opciones del proyecto">⋮</button>
+                            <div class="menu-contenido">
+                                <a th:href="@{/admin/proyectos/editar/{id}(id=${proyecto.id})}" class="editar-proyecto">Editar</a>
+                                <a href="#" class="eliminar-proyecto" th:data-id="${proyecto.id}">Eliminar</a>
+                                <a th:href="@{/admin/proyectos/detalles/{id}(id=${proyecto.id})}" class="ver-detalles-proyecto">Detalles</a>
+                                <a th:href="@{/admin/proyectos/participantes/{id}(id=${proyecto.id})}" class="ver-participantes">Ver Participantes</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h2>Proyectos Expirados</h2>
+            <div class="proyectos-expirados">
+                <div th:each="proyecto : ${proyectosExpirados}" class="Tarjeta" th:data-id="${proyecto.id}">
+                    <div class="Imagen">
+                        <img th:src="${proyecto.imagenUrl}" alt="Imagen del proyecto">
+                    </div>
+                    <div class="proyectonombre" th:text="${proyecto.nombre}"></div>
+                    <div class="proyectodescripcion" th:text="${proyecto.descripcion}"></div>
+                    <div class="proyectofecha" th:text="'Fecha de expiración: ' + ${#temporals.format(proyecto.fechaExpiracion, 'dd-MM-yyyy HH:mm')}"></div>
+                    <div class="proyectoparticipantes" th:text="'Participantes: ' + ${proyecto.participantes.size()}"></div>
+                    <div class="tarjeta-acciones">
+                        <div class="menu-proyecto">
+                            <button class="menu-btn" aria-label="Opciones del proyecto">⋮</button>
+                            <div class="menu-contenido">
+                                <a href="#" class="eliminar-proyecto" th:data-id="${proyecto.id}">Eliminar</a>
+                                <a th:href="@{/admin/proyectos/detalles/{id}(id=${proyecto.id})}" class="ver-detalles-proyecto">Detalles</a>
+                                <a th:href="@{/admin/proyectos/participantes/{id}(id=${proyecto.id})}" class="ver-participantes">Ver Participantes</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal para editar proyecto -->
+    <div id="editarProyectoModal" class="modal">
+        <div class="modal-content">
+            <h3>Editar Proyecto</h3>
+            <form id="formEditarProyecto" enctype="multipart/form-data">
+                <input type="hidden" id="editProyectoId" name="id">
+                <input type="text" id="editNombreProyecto" name="nombre" required>
+                <textarea id="editDescripcionProyecto" name="descripcion" required></textarea>
+                <input type="file" id="editImagenProyecto" name="imagen" accept="image/*">
+                <button type="submit">Guardar cambios</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal para confirmar eliminación -->
+    <div id="eliminarProyectoModal" class="modal">
+        <div class="modal-content">
+            <h3>Eliminar Proyecto</h3>
+            <p>¿Está seguro de que desea eliminar este proyecto?</p>
+            <button id="confirmarEliminar">Sí, eliminar</button>
+            <button id="cancelarEliminar">Cancelar</button>
+        </div>
+    </div>
+
+    <!-- Modal para ver detalles del proyecto -->
+    <div id="detallesProyectoModal" class="modal">
+        <div class="modal-content">
+            <h3>Detalles del Proyecto</h3>
+            <div id="detallesProyectoContenido"></div>
+        </div>
+    </div>
+
+    <!-- Modal para ver participantes -->
+    <div id="participantesModal" class="modal">
+        <div class="modal-content">
+            <h3>Participantes del Proyecto</h3>
+            <ul id="listaParticipantes"></ul>
+        </div>
+    </div>
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuButton = document.querySelector('.menu-mobile');
+            const nav = document.querySelector('nav');
+            const menuHorizontal = document.querySelector('.menu-horizontal');
+            const menuItems = document.querySelectorAll('.menu-horizontal > li');
+
+            // Crear el overlay si no existe
+            let overlay = document.querySelector('.overlay');
+            if (!overlay) {
+                overlay = document.createElement('div');
+                overlay.className = 'overlay';
+                document.body.appendChild(overlay);
+            }
+
+            // Manejador del botón de menú móvil
+            menuButton.addEventListener('click', function() {
+                menuButton.classList.toggle('active');
+                nav.classList.toggle('active');
+                menuHorizontal.classList.toggle('active');
+                overlay.classList.toggle('active');
+                document.body.classList.toggle('no-scroll');
+            });
+
+            // Manejador para los elementos del menú
+            menuItems.forEach(item => {
+                const link = item.querySelector('a');
+                const submenu = item.querySelector('.menu-vertical');
+
+                if (submenu) {
+                    item.addEventListener('click', function(e) {
+                        if (window.innerWidth <= 768) {
+                            // Cerrar otros submenús abiertos
+                            menuItems.forEach(otherItem => {
+                                if (otherItem !== item && otherItem.classList.contains('active')) {
+                                    otherItem.classList.remove('active');
+                                }
+                            });
+
+                            // Alternar el estado del submenú actual
+                            item.classList.toggle('active');
+                        }
+                    });
+
+                    // Permitir que los enlaces del submenú funcionen normalmente
+                    submenu.querySelectorAll('a').forEach(subLink => {
+                        subLink.addEventListener('click', (e) => {
+                            e.stopPropagation();
+                        });
+                    });
+                }
+            });
+
+            // Cerrar menú al hacer clic en el overlay
+            overlay.addEventListener('click', function() {
+                menuButton.classList.remove('active');
+                nav.classList.remove('active');
+                menuHorizontal.classList.remove('active');
+                overlay.classList.remove('active');
+                document.body.classList.remove('no-scroll');
+
+                // Cerrar todos los submenús
+                menuItems.forEach(item => {
+                    item.classList.remove('active');
+                });
+            });
+        });
+
+        // Resto del código existente para el foro
+        const adminUser = true;
+        /*]]>*/
+    </script>
+
+    <script>
+        /**
+         * Muestra el formulario de creación de proyectos.
+         */
+        function mostrarFormularioCreacion() {
+            document.getElementById('formularioCreacion').style.display = 'block';
+        }
+
+        $(document).ready(function() {
+            // Conectar WebSocket
+            const socket = new SockJS('/ws-proyectos');
+            const stompClient = Stomp.over(socket);
+
+            stompClient.connect({}, function(frame) {
+                console.log('Conectado al WebSocket');
+                stompClient.subscribe('/topic/proyectos', function(message) {
+                    const data = JSON.parse(message.body);
+                    if (data.tipo === 'NUEVO_PROYECTO') {
+                        agregarNuevoProyecto(data.proyecto);
+                    }
+                });
+            });
+
+            // Manejar el envío del formulario
+            $('#formCrearProyecto').submit(function(e) {
+                e.preventDefault();
+
+                // Validar que se haya seleccionado una imagen
+                const imagen = $('#imagenProyecto')[0].files[0];
+                if (!imagen) {
+                    mostrarNotificacion('Por favor seleccione una imagen', 'error');
+                    return;
+                }
+
+                // Validar tamaño de imagen (por ejemplo, máximo 5MB)
+                if (imagen.size > 5 * 1024 * 1024) {
+                    mostrarNotificacion('La imagen no debe superar los 5MB', 'error');
+                    return;
+                }
+
+                const formData = new FormData();
+                formData.append('nombre', $('#nombreProyecto').val());
+                formData.append('descripcion', $('#descripcionProyecto').val());
+                formData.append('fechaExpiracion', $('#fechaExpiracion').val());
+                formData.append('imagen', imagen);
+
+                // Mostrar loader con progreso
+                mostrarLoaderConProgreso();
+
+                $.ajax({
+                    url: '/admin/proyectos/crear',
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    xhr: function() {
+                        const xhr = new window.XMLHttpRequest();
+                        xhr.upload.addEventListener('progress', function(evt) {
+                            if (evt.lengthComputable) {
+                                const percentComplete = (evt.loaded / evt.total) * 100;
+                                actualizarProgreso(percentComplete);
+                            }
+                        }, false);
+                        return xhr;
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            $('#formCrearProyecto')[0].reset();
+                            $('#formularioCreacion').hide();
+                            mostrarNotificacion('Proyecto creado con éxito', 'success');
+                            setTimeout(() => {
+                                location.reload();
+                            }, 1500);
+                        } else {
+                            mostrarNotificacion(response.message || 'Error al crear el proyecto', 'error');
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        mostrarNotificacion('Error al crear el proyecto: ' + error, 'error');
+                    },
+                    complete: function() {
+                        ocultarLoader();
+                    }
+                });
+            });
+
+            function agregarNuevoProyecto(proyecto) {
+                const tarjeta = crearTarjetaProyecto(proyecto);
+                if (!$(`[data-id="${proyecto.id}"]`).length) {
+                    if (proyecto.isActivo) {
+                        $('.proyectos-activos').prepend(tarjeta);
+                        actualizarBarrasProgreso();
+                    } else {
+                        $('.proyectos-expirados').prepend(tarjeta);
+                    }
+                }
+
+                // Manejar eliminación de proyecto
+                if (data.tipo === 'ELIMINAR_PROYECTO') {
+                    $(`[data-id="${data.proyectoId}"]`).remove();
+                }
+            }
+
+            function mostrarNotificacion(mensaje, tipo) {
+                const notificacion = $('<div>')
+                    .addClass('notificacion ' + tipo)
+                    .text(mensaje);
+
+                $('body').append(notificacion);
+
+                setTimeout(() => {
+                    notificacion.fadeOut(300, function() {
+                        $(this).remove();
+                    });
+                }, 3000);
+            }
+
+            // Maneja el clic en el botón de crear proyecto
+            $('#btnCrearProyecto').click(function() {
+                $('#formularioCreacion').slideToggle();
+            });
+
+            function cargarProyectos() {
+                $.get('/admin/proyectos/todos', function(proyectos) {
+                    var proyectosActivos = $('#proyectosActivos');
+                    var proyectosExpirados = $('#proyectosExpirados');
+                    proyectosActivos.empty();
+                    proyectosExpirados.empty();
+
+                    if (proyectos && proyectos.activos) {
+                        proyectos.activos.forEach(function(proyecto) {
+                            proyectosActivos.append(crearTarjetaProyecto(proyecto));
+                        });
+                    }
+
+                    if (proyectos && proyectos.expirados) {
+                        proyectos.expirados.forEach(function(proyecto) {
+                            proyectosExpirados.append(crearTarjetaProyecto(proyecto));
+                        });
+                    }
+                });
+            }
+
+            function crearTarjetaProyecto(proyecto) {
+                const fechaExpiracion = proyecto.fechaExpiracion ?
+                    new Date(proyecto.fechaExpiracion).toLocaleString() : 'No definida';
+                const esActivo = proyecto.fechaExpiracion && new Date(proyecto.fechaExpiracion) > new Date();
+
+                return `
+                    <div class="Tarjeta" data-id="${proyecto.id}">
+                        <div class="Imagen">
+                            <img src="${proyecto.imagenUrl}" alt="${proyecto.nombre}" onerror="this.src='/Imagenes/default-project.jpg'">
+                        </div>
+                        <div class="tarjeta-contenido">
+                            <div class="proyectonombre">${proyecto.nombre}</div>
+                            <p class="proyectodescripcion">${proyecto.descripcion}</p>
+                            <p class="proyectofecha">Creado el: ${new Date(proyecto.fechaCreacion).toLocaleString()}</p>
+                            <p class="proyectofechaExpiracion">Expira el: ${fechaExpiracion}</p>
+                            <p class="proyectoparticipantes">Participantes: ${proyecto.numeroParticipantes || 0}</p>
+                            <div class="progreso-container">
+                                <div class="progreso" 
+                                     data-creacion="${proyecto.fechaCreacion}" 
+                                     data-expiracion="${proyecto.fechaExpiracion}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tarjeta-acciones">
+                            <div class="menu-proyecto">
+                                <button class="menu-btn" aria-label="Opciones del proyecto">⋮</button>
+                                <div class="menu-contenido">
+                                    <a href="#" class="editar-proyecto" data-id="${proyecto.id}">Editar</a>
+                                    <a href="#" class="eliminar-proyecto" data-id="${proyecto.id}">Eliminar</a>
+                                    <a href="#" class="ver-detalles-proyecto" data-id="${proyecto.id}">Detalles</a>
+                                    <a href="#" class="ver-participantes" data-id="${proyecto.id}">Ver Participantes</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            function mostrarLoader() {
+                if (!$('.loader-overlay').length) {
+                    $('body').append(`
+                        <div class="loader-overlay">
+                            <div class="loader"></div>
+                        </div>
+                    `);
+                }
+                $('.loader-overlay').fadeIn();
+            }
+
+            function ocultarLoader() {
+                $('.loader-overlay').fadeOut();
+            }
+
+            // Load projects when the page loads
+            cargarProyectos();
+
+            // Event delegation for dynamically created elements
+            $(document).on('click', '.editar-proyecto', function(e) {
+                e.preventDefault();
+                var proyectoId = $(this).data('id');
+                editarProyecto(proyectoId);
+            });
+
+            $(document).on('click', '.eliminar-proyecto', function(e) {
+                e.preventDefault();
+                var proyectoId = $(this).data('id');
+                console.log("ID del proyecto a eliminar (del botón):", proyectoId);
+
+                if (!proyectoId) {
+                    proyectoId = $(this).closest('.Tarjeta').data('id');
+                    console.log("ID del proyecto a eliminar (de la tarjeta):", proyectoId);
+                }
+
+                if (proyectoId && !isNaN(proyectoId)) {
+                    confirmarEliminarProyecto(proyectoId);
+                } else {
+                    alert('ID de proyecto inválido: ' + proyectoId);
+                }
+            });
+
+            $(document).on('click', '.ver-detalles-proyecto', function(e) {
+                e.preventDefault();
+                var proyectoId = $(this).data('id');
+                mostrarDetallesProyecto(proyectoId);
+            });
+
+            $(document).on('click', '.ver-participantes', function(e) {
+                e.preventDefault();
+                var proyectoId = $(this).data('id');
+                mostrarParticipantes(proyectoId);
+            });
+
+            function editarProyecto(id) {
+                $.get('/admin/proyectos/' + id, function(proyecto) {
+                    $('#editProyectoId').val(proyecto.id);
+                    $('#editNombreProyecto').val(proyecto.nombre);
+                    $('#editDescripcionProyecto').val(proyecto.descripcion);
+                    $('#editarProyectoModal').show();
+                });
+            }
+
+            /**
+             * Muestra el modal de confirmación para eliminar un proyecto.
+             * @param {number} id - ID del proyecto a eliminar.
+             */
+            function confirmarEliminarProyecto(id) {
+                console.log("Confirmando eliminación del proyecto con ID:", id);
+                $('#eliminarProyectoModal').show();
+                $('#confirmarEliminar').off('click').on('click', function() {
+                    eliminarProyecto(id);
+                });
+            }
+
+            /**
+             * Realiza la petición AJAX para eliminar un proyecto.
+             * @param {number} id - ID del proyecto a eliminar.
+             */
+            function eliminarProyecto(proyectoId) {
+                if (confirm('¿Estás seguro de que quieres eliminar este proyecto?')) {
+                    fetch('/admin/proyectos/eliminar/' + proyectoId, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                // Incluye el token CSRF si estás usando Spring Security
+                                // 'X-CSRF-TOKEN': document.querySelector('meta[name="_csrf"]').getAttribute('content')
+                            }
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                alert(data.message);
+                                // Recargar la página o actualizar la lista de proyectos
+                                location.reload();
+                            } else {
+                                alert('Error: ' + data.message);
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            alert('Error al eliminar el proyecto: ' + error);
+                        });
+                }
+            }
+
+            // Cierra el modal de eliminación al hacer clic en cancelar
+            $('#cancelarEliminar').click(function() {
+                $('#eliminarProyectoModal').hide();
+            });
+
+            function mostrarDetallesProyecto(id) {
+                $.get('/admin/proyectos/' + id, function(proyecto) {
+                    var detalles = `
+                        <h4>${proyecto.nombre}</h4>
+                        <img src="${proyecto.imagenUrl}" alt="${proyecto.nombre}" style="max-width: 100%;">
+                        <p>${proyecto.descripcion}</p>
+                        <p>Fecha de creación: ${new Date(proyecto.fechaCreacion).toLocaleString()}</p>
+                        <p>Fecha de expiración: ${new Date(proyecto.fechaExpiracion).toLocaleString()}</p>
+                        <p>Número de participantes: ${proyecto.numeroParticipantes}</p>
+                    `;
+                    $('#detallesProyectoContenido').html(detalles);
+                    $('#detallesProyectoModal').show();
+                });
+            }
+
+            function mostrarParticipantes(id) {
+                $.get('/admin/proyectos/' + id + '/participantes', function(participantes) {
+                    var lista = $('#listaParticipantes');
+                    lista.empty();
+                    participantes.forEach(function(participante) {
+                        lista.append('<li>' + participante.nombre + ' - ' + participante.correo + '</li>');
+                    });
+                    $('#participantesModal').show();
+                });
+            }
+
+            // Cierra los modales al hacer clic fuera de ellos
+            $('.modal').click(function(e) {
+                if (e.target === this) {
+                    $(this).hide();
+                }
+            });
+
+            // Maneja el clic en el botón de editar proyecto
+            $('.editar-proyecto').click(function(e) {
+                e.preventDefault();
+                var proyectoId = $(this).closest('.Tarjeta').data('id');
+                $.get('/admin/proyectos/' + proyectoId, function(proyecto) {
+                    $('#editProyectoId').val(proyecto.id);
+                    $('#editNombreProyecto').val(proyecto.nombre);
+                    $('#editDescripcionProyecto').val(proyecto.descripcion);
+                    $('#editarProyectoModal').show();
+                });
+            });
+
+            /**
+             * Maneja el envío del formulario para editar un proyecto.
+             * Realiza una petición AJAX para actualizar el proyecto en el servidor.
+             */
+            $('#formEditarProyecto').submit(function(e) {
+                e.preventDefault();
+                var formData = new FormData(this);
+                var id = $('#editProyectoId').val();
+
+                $.ajax({
+                    url: '/admin/proyectos/editar/' + id,
+                    type: 'PUT',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(response) {
+                        alert('Proyecto actualizado con éxito');
+                        $('#editarProyectoModal').hide();
+                        cargarProyectos();
+                    },
+                    error: function(xhr, status, error) {
+                        alert('Error al actualizar el proyecto: ' + error);
+                    }
+                });
+            });
+
+            // Maneja el clic en el botón de eliminar proyecto
+            $('.eliminar-proyecto').click(function(e) {
+                e.preventDefault();
+                var proyectoId = $(this).closest('.Tarjeta').data('id');
+                $('#eliminarProyectoModal').show();
+                $('#confirmarEliminar').off('click').on('click', function() {
+                    $.ajax({
+                        url: '/admin/proyectos/eliminar/' + proyectoId,
+                        type: 'DELETE',
+                        success: function(response) {
+                            alert('Proyecto eliminado con éxito');
+                            location.reload();
+                        },
+                        error: function(xhr, status, error) {
+                            alert('Error al eliminar el proyecto: ' + error);
+                        }
+                    });
+                });
+            });
+
+            // Cierra el modal de eliminación al hacer clic en cancelar
+            $('#cancelarEliminar').click(function() {
+                $('#eliminarProyectoModal').hide();
+            });
+
+            // Maneja el clic en el botón de ver detalles del proyecto
+            $('.ver-detalles-proyecto').click(function(e) {
+                e.preventDefault();
+                var proyectoId = $(this).closest('.Tarjeta').data('id');
+                $.get('/admin/proyectos/' + proyectoId, function(proyecto) {
+                    var detalles = `
+                        <h4>${proyecto.nombre}</h4>
+                        <img src="${proyecto.imagenUrl}" alt="${proyecto.nombre}" style="max-width: 100%;">
+                        <p>${proyecto.descripcion}</p>
+                    `;
+                    $('#detallesProyectoContenido').html(detalles);
+                    $('#detallesProyectoModal').show();
+                });
+            });
+
+            // Cerrar modales
+            $('.modal').click(function(e) {
+                if (e.target === this) {
+                    $(this).hide();
+                }
+            });
+
+            // Mostrar/ocultar menú al hacer clic en los tres puntos
+            $(document).on('click', '.menu-btn', function(e) {
+                e.stopPropagation();
+                $(this).siblings('.menu-contenido').toggle();
+            });
+
+            // Oculta el menú al hacer clic fuera de él
+            $(document).click(function() {
+                $('.menu-contenido').hide();
+            });
+
+            // Evita que el menú se cierre al hacer clic dentro de él
+            $('.menu-contenido').click(function(e) {
+                e.stopPropagation();
+            });
+
+            /**
+             * Maneja el clic en el botón de ver participantes.
+             * Carga y muestra la lista de participantes de un proyecto.
+             */
+            $('.ver-participantes').click(function(e) {
+                e.preventDefault();
+                var proyectoId = $(this).closest('.Tarjeta').data('id');
+                $.get('/admin/proyectos/' + proyectoId + '/participantes', function(participantes) {
+                    var lista = $('#listaParticipantes');
+                    lista.empty();
+                    participantes.forEach(function(participante) {
+                        lista.append('<li>' + participante.nombre + ' - ' + participante.correo + '</li>');
+                    });
+                    $('#participantesModal').show();
+                });
+            });
+
+            $(document).on('click', '.participar-proyecto', function(e) {
+                e.preventDefault();
+                var proyectoId = $(this).data('id');
+                $.post('/admin/proyectos/' + proyectoId + '/participar', function(response) {
+                    alert('Has participado en el proyecto exitosamente');
+                    cargarProyectos(); // Recargar los proyectos para actualizar la información
+                }).fail(function() {
+                    alert('Error al participar en el proyecto');
+                });
+            });
+
+            // Maneja clics en las opciones del menú de cada proyecto
+            $('.menu-contenido a').click(function(e) {
+                e.preventDefault();
+                var action = $(this).attr('class');
+                var proyectoId = $(this).closest('.Tarjeta').data('id');
+
+                if (action === 'eliminar-proyecto') {
+                    confirmarEliminarProyecto(proyectoId);
+                }
+            });
+
+            function confirmarEliminarProyecto(id) {
+                if (id && !isNaN(id)) {
+                    $('#eliminarProyectoModal').show();
+                    $('#confirmarEliminar').off('click').on('click', function() {
+                        eliminarProyecto(id);
+                    });
+                } else {
+                    alert('ID de proyecto inválido');
+                }
+            }
+
+            function eliminarProyecto(id) {
+                if (id && !isNaN(id)) {
+                    $.ajax({
+                        url: '/admin/proyectos/eliminar/' + id,
+                        type: 'DELETE',
+                        success: function(response) {
+                            if (response === "Proyecto eliminado con éxito") {
+                                alert('Proyecto eliminado con éxito');
+                                $('[data-id="' + id + '"]').remove();
+                                $('#eliminarProyectoModal').hide();
+                            } else {
+                                alert('Error al eliminar el proyecto: ' + response);
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            alert('Error al eliminar el proyecto: ' + error);
+                        }
+                    });
+                } else {
+                    alert('ID de proyecto inválido');
+                }
+            }
+
+            // Cierra el modal de eliminación al hacer clic en cancelar
+            $('#cancelarEliminar').click(function() {
+                $('#eliminarProyectoModal').hide();
+            });
+
+            function actualizarBarrasProgreso() {
+                $('.progreso').each(function() {
+                    var $this = $(this);
+                    var fechaCreacion = new Date($this.data('creacion'));
+                    var fechaExpiracion = new Date($this.data('expiracion'));
+                    var ahora = new Date();
+
+                    var tiempoTotal = fechaExpiracion - fechaCreacion;
+                    var tiempoTranscurrido = ahora - fechaCreacion;
+                    var porcentaje = Math.min(100, Math.max(0, (tiempoTranscurrido / tiempoTotal) * 100));
+
+                    $this.css('width', porcentaje + '%');
+                    $this.attr('title', porcentaje.toFixed(2) + '% completado');
+                });
+            }
+
+            // Actualizar barras de progreso al cargar la página
+            actualizarBarrasProgreso();
+
+            // Actualizar barras de progreso cada minuto
+            setInterval(actualizarBarrasProgreso, 60000);
+
+            // Agregar estas nuevas funciones
+            function mostrarLoaderConProgreso() {
+                if (!$('.loader-overlay').length) {
+                    $('body').append(`
+                        <div class="loader-overlay">
+                            <div class="loader-container">
+                                <div class="loader"></div>
+                                <div class="progress-bar">
+                                    <div class="progress"></div>
+                                </div>
+                                <div class="progress-text">0%</div>
+                            </div>
+                        </div>
+                    `);
+                }
+                $('.loader-overlay').fadeIn();
+            }
+
+            function actualizarProgreso(porcentaje) {
+                $('.loader-overlay .progress').css('width', porcentaje + '%');
+                $('.loader-overlay .progress-text').text(Math.round(porcentaje) + '%');
+            }
+        });
+    </script>
+
+
+</body>
+
+</html>

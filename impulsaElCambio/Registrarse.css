@@ -1,0 +1,344 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: "Limelight", "Literata", sans-serif;
+    background: linear-gradient(135deg, #fff, #C8A2C8 70%);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 5px;
+    background-color: white;
+    gap: 20px;
+  }
+  
+  .logo img {
+    width: 400px;
+    max-height: 300px;
+    margin-right: 10px;
+  }
+  
+  .IMPULSA-EL-CAMBIO {
+    font-size: 85px;
+    color: #03b7bce6;
+    -webkit-text-stroke: 0.5px #ffffff;
+    text-shadow: 0 4px 6px #03b7bce6;
+    margin: 5px 0;
+    font-family: "Limelight", "Literata", sans-serif;
+    margin: 0;
+    font-weight: normal;
+  }
+  
+  .navbar {
+    background-color: #cb73fa;
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+    padding: 5px 0;
+    width: 100%;
+  }
+  
+  .navbar ul {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    padding: 0;
+    margin: 0 10px;
+    width: 100%;
+  }
+  
+  .navbar ul li {
+    margin: 0;
+  }
+  
+  .navbar ul li a {
+    text-decoration: none;
+    color: #000;
+    font-size: 24px;
+    font-weight: bold;
+    font-family: "Literata", serif;
+    padding: 16px 32px;
+    display: block;
+    border: none;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+  
+  .navbar ul li a i {
+    margin-right: 10px;
+  }
+  
+  .navbar ul li a:hover {
+    background-color: #45b5c9;
+    color: white;
+    transform: scale(1.05);
+  }
+
+.registrocontenido {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-size: cover;
+    background-position: center;
+    padding: 20px;
+    flex-direction: column;
+    gap: 20px;
+    border: none;
+}
+
+.registroformulario {
+    background-color: #ffffff;
+    padding: 40px;
+    border-radius: 30px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    width: 100%;
+    margin: 0 auto;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+.registroformulario h2 {
+    color: rgb(0, 0, 0);
+    font-size: 35px;
+    margin-bottom: 25px;
+    font-family: 'Mitr', sans-serif;
+}
+
+.input-group {
+    width: 100%;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.input-group label {
+    display: block;
+    color: rgb(0, 0, 0);
+    margin-bottom: 8px;
+    font-size: 23px;
+    font-family: "Mitr", sans-serif;
+    font-weight: 500;
+}
+
+.input-container {
+    position: relative;
+    width: 90%;
+    margin: 0 auto;
+}
+
+.input-container i {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #000000;
+    font-size: 16px;
+}
+
+.input-container input {
+    width: 100%;
+    padding: 12px 12px 12px 40px;
+    border: 1px solid #000000;
+    border-radius: 15px;
+    font-size: 20px;
+    font-family: "Mitr", sans-serif;
+    font-weight: 500;
+    background: white;
+    box-sizing: border-box;
+    
+}
+
+.terms {
+    width: 90%;
+    margin: 20px auto;
+    text-align: left;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.terms label {
+    color: rgb(0, 0, 0);
+    font-size: 20px;
+    line-height: 1.4;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+button[type="submit"] {
+    display: inline-block;
+  background: linear-gradient(to right, #6b2491 17%, #1cbec3 86%);
+  padding: 15px 40px;
+  border-radius: 25px;
+  cursor: pointer;
+  text-align: center;
+  margin: 20px 0;
+  transition: transform 0.2s ease;
+  color: black;
+  text-decoration: none;
+  font-family: "Mitr", serif;
+  font-weight: bold;
+  font-size: 18px;
+  border: none;
+}
+
+button[type="submit"]:hover {
+    transform: scale(1.05);
+}
+
+.registroformulario p {
+    color: white;
+    font-size: 14px;
+    margin-top: 15px;
+}
+
+.registroformulario p a {
+    color: white;
+    text-decoration: underline;
+    font-weight: 600;
+}
+
+@media (max-width: 768px) {
+    .registroformulario {
+        max-width: 350px;
+        padding: 25px;
+    }
+
+    .input-container input {
+        padding: 10px 10px 10px 35px;
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 480px) {
+    .registroformulario {
+        max-width: 300px;
+        padding: 20px;
+    }
+
+    .input-group label {
+        font-size: 13px;
+    }
+
+    .terms label {
+        font-size: 12px;
+    }
+}
+
+p {
+    text-align: center;
+    font-size: 0.9em;
+    color: #333;
+}
+
+p a {
+    color: #5c008c;
+    text-decoration: underline;
+    font-family: Mitr, sans-serif;
+}
+
+p a:hover {
+    text-decoration: underline;
+}
+
+h2 {
+    font-family: "Literata", serif;
+}
+
+@media (max-width: 768px) {
+    body {
+        background: linear-gradient(135deg, #fff, #C8A2C8 70%);
+      }
+    
+      .header {
+        flex-direction: column; 
+        align-items: center; 
+        padding: 10%;
+      }
+    
+      .logo img {
+        width: 80%; 
+        max-height: 200px;
+      }
+    
+      .IMPULSA-EL-CAMBIO {
+        font-size: 40px;
+        margin: 10px 0;
+      }
+    
+      .navbar ul {
+        flex-direction: column; 
+      }
+    
+      .navbar ul li a {
+        font-size: 18px;
+        padding: 12px 20px; 
+      }
+
+    .registroformulario {
+        padding: 20px;
+        max-width: 90%;
+    }
+}
+
+@media (max-width: 480px) {
+    .logo img {
+        width: 120px;
+    }
+    .IMPULSA-EL-CAMBIO {
+        font-size: 24px;
+    }
+    .navbar {
+        padding: 5px 0;
+    }
+    .navbar ul li {
+        margin: 3px 5px;
+    }
+    .navbar ul li a {
+        font-size: 14px;
+    }
+    .registroformulario {
+        padding: 15px;
+    }
+    .identificadores input {
+        padding: 8px;
+        font-size: 14px;
+    }
+    .identificadores label {
+        font-size: 14px;
+    }
+    .identificadores.terms {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .identificadores.terms input[type="checkbox"] {
+        margin-right: 0;
+        margin-bottom: 5px;
+    }
+    .identificadores.terms label {
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 320px) {
+    .IMPULSA-EL-CAMBIO {
+        font-size: 20px;
+    }
+    .navbar ul li a {
+        font-size: 12px;
+    }
+    .registroformulario h2 {
+        font-size: 1.2em;
+    }
+    .identificadores input,
+    .identificadores label {
+        font-size: 12px;
+    }
+}
+
+.identificadores input:focus {
+    outline: none;
+    background-color: rgba(255, 255, 255, 0.3);
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3);
+}

@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Estadísticas - Impulsa el Cambio</title>
+    <link rel="stylesheet" href="/Graficas.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Limelight&family=Literata:ital,opsz,wght@0,7..72,200..900;1,7..72,200..900&family=Luckiest+Guy&family=Lusitana:wght@400;700&family=Mitr:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+    <header class="header">
+        <div class="logo">
+            <img src="/Imagenes/Logo.png" alt="Logo" class="Logo">
+        </div>
+        <h1 class="IMPULSA-EL-CAMBIO">IMPULSA EL CAMBIO</h1>
+        <button class="menu-mobile" aria-label="Menu">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </button>
+    </header>
+    <nav>
+        <ul class="menu-horizontal">
+            <li><a href="/admin/inicio"><i class="fas fa-home"></i> Inicio</a></li>
+            <li>
+                <a href="#"><i class="fas fa-project-diagram"></i> Proyectos <i class="fas fa-caret-down"></i></a>
+                <ul class="menu-vertical">
+                    <li><a href="/admin/proyectos"><i class="fas fa-list"></i> Ver Proyectos</a></li>
+                    <li><a href="/admin/desafios/crear"><i class="fas fa-flag"></i> Desafío</a></li>
+
+                </ul>
+            </li>
+            <li>
+                <a href="#"><i class="fas fa-users"></i> Voluntarios <i class="fas fa-caret-down"></i></a>
+                <ul class="menu-vertical">
+                    <li><a href="/Graficas"><i class="fas fa-chart-line"></i> Ver Graficas</a></li>
+                    <li><a href="/admin/Estadisticas"><i class="fas fa-chart-bar"></i> Estadísticas</a></li>
+                    <li><a href="/admin/ManejoUser"><i class="fas fa-user-plus"></i> Registro</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="#"><i class="fas fa-comments"></i> Foro <i class="fas fa-caret-down"></i></a>
+                <ul class="menu-vertical">
+                    <li><a href="/admin/foroAdmin"><i class="fas fa-comment-dots"></i> Ver Publicaciones</a></li>
+
+                </ul>
+            </li>
+            <li>
+                <a href="#"><i class="fas fa-user"></i> Mi Cuenta <i class="fas fa-caret-down"></i></a>
+                <ul class="menu-vertical">
+                    <li><a href="/PerfilAdmin"><i class="fas fa-id-card"></i> Perfil</a></li>
+                    <li><a href="#"><i class="fas fa-cog"></i> Configuración</a></li>
+                    <li><a href="/admin/cerrarSesion"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a></li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+    <main>
+        <h2>Estadísticas de Impulsa el Cambio</h2>
+        <div class="stats-container">
+            <div class="stat-card">
+                <h3>Usuarios Registrados</h3>
+                <div class="bar-chart">
+                    <canvas id="usuariosChart"></canvas>
+                    <span class="tooltip" th:text="${totalUsuariosRegistrados + ' Usuarios'}">0 Usuarios</span>
+                </div>
+                <p>Total Usuarios</p>
+            </div>
+
+            <div class="stat-card">
+                <h3>Proyectos Activos</h3>
+                <div class="bar-chart">
+                    <canvas id="proyectosChart"></canvas>
+                    <span class="tooltip">Proyectos Activos</span>
+                </div>
+                <p>Total Proyectos</p>
+            </div>
+
+            <div class="stat-card">
+                <h3>Publicaciones en el Foro</h3>
+                <div class="bar-chart">
+                    <canvas id="foroChart"></canvas>
+                    <span class="tooltip" th:text="${totalPublicacionesForo + ' Publicaciones'}">0 Publicaciones</span>
+                </div>
+                <p>Total Publicaciones</p>
+            </div>
+
+            <div class="stat-card">
+                <h3>Voluntarios Activos</h3>
+                <div class="bar-chart">
+                    <canvas id="voluntariosChart"></canvas>
+                    <span class="tooltip" th:text="${totalVoluntariosActivos + ' Voluntarios'}">0 Voluntarios</span>
+                </div>
+                <p>Total Voluntarios</p>
+            </div>
+        </div>
+    </main>
+    <script th:inline="javascript">
+        const Estadisticas = {
+            charts: {},
+
+            createChart(id, type, label, data) {
+                const ctx = document.getElementById(id);
+                return new Chart(ctx, {
+                    type: type,
+                    data: {
+                        labels: data.labels,
+                        datasets: [{
+                            label: label,
+                            data: data.values,
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            borderColor: 'rgb(115,53,168)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    stepSize: 1,
+                                    precision: 0
+                                }
+                            }
+                        }
+                    }
+                });
+            },
+
+            initCharts() {
+                const totalUsuariosRegistrados = /*[[${totalUsuariosRegistrados}]]*/ 0;
+                const nombresProyectos = /*[[${nombresProyectosActivos}]]*/ [];
+                const participantesProyectos = /*[[${participantesProyectosActivos}]]*/ [];
+                const totalPublicacionesForo = /*[[${totalPublicacionesForo}]]*/ 0;
+                const totalVoluntariosActivos = /*[[${totalVoluntariosActivos}]]*/ 0;
+
+                this.charts.usuarios = this.createChart('usuariosChart', 'bar', 'Usuarios Registrados', {
+                    labels: ['Total Usuarios'],
+                    values: [totalUsuariosRegistrados]
+                });
+
+                this.charts.proyectos = this.createChart('proyectosChart', 'bar', 'Proyectos Activos', {
+                    labels: nombresProyectos,
+                    values: participantesProyectos
+                });
+
+                this.charts.foro = this.createChart('foroChart', 'bar', 'Publicaciones en el Foro', {
+                    labels: ['Total Publicaciones'],
+                    values: [totalPublicacionesForo]
+                });
+
+                this.charts.voluntarios = this.createChart('voluntariosChart', 'bar', 'Voluntarios Activos', {
+                    labels: ['Total Voluntarios'],
+                    values: [totalVoluntariosActivos]
+                });
+            },
+
+            init() {
+                this.initCharts();
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            Estadisticas.init();
+            console.log('Estadísticas inicializadas');
+
+            // Funcionalidad del menú hamburguesa
+            const menuButton = document.querySelector('.menu-mobile');
+            const menuHorizontal = document.querySelector('.menu-horizontal');
+            const menuItems = document.querySelectorAll('.menu-horizontal > li > a');
+
+            // Crear overlay
+            const overlay = document.createElement('div');
+            overlay.className = 'overlay';
+            document.body.appendChild(overlay);
+
+            // Toggle menú
+            menuButton.addEventListener('click', () => {
+                menuHorizontal.classList.toggle('active');
+                overlay.classList.toggle('active');
+                menuButton.classList.toggle('active');
+            });
+
+            // Manejar submenús
+            menuItems.forEach(item => {
+                if (item.nextElementSibling) {
+                    item.addEventListener('click', (e) => {
+                        if (window.innerWidth <= 768) {
+                            e.preventDefault();
+                            item.parentElement.classList.toggle('active');
+                        }
+                    });
+                }
+            });
+
+            // Cerrar menú al hacer clic en overlay
+            overlay.addEventListener('click', () => {
+                menuHorizontal.classList.remove('active');
+                overlay.classList.remove('active');
+                menuButton.classList.remove('active');
+                document.querySelectorAll('.menu-horizontal > li').forEach(item => {
+                    item.classList.remove('active');
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Perfil de Administrador - Impulsa el Cambio</title>
+    <link rel="stylesheet" type="text/css" href="/PerfilAdmin.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Limelight&family=Literata:ital,opsz,wght@0,7..72,200..900;1,7..72,200..900&family=Luckiest+Guy&family=Lusitana:wght@400;700&family=Mitr:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+<header class="header">
+    <div class="logo">
+        <img src="/Imagenes/Logo.png" alt="Logo" class="Logo">
+    </div>
+    <h1 class="IMPULSA-EL-CAMBIO">IMPULSA EL CAMBIO</h1>
+</header>
+<nav>
+    <ul class="menu-horizontal">
+        <li><a href="/admin/inicio"><i class="fas fa-home"></i> Inicio</a></li>
+        <li>
+            <a href="#"><i class="fas fa-project-diagram"></i> Proyectos <i class="fas fa-caret-down"></i></a>
+            <ul class="menu-vertical">
+                <li><a href="/admin/proyectos"><i class="fas fa-list"></i> Ver Proyectos</a></li>
+                <li><a href="/admin/desafios/crear"><i class="fas fa-flag"></i> Desafío</a></li>
+            </ul>
+        </li>
+        <li>
+            <a href="#"><i class="fas fa-users"></i> Voluntarios <i class="fas fa-caret-down"></i></a>
+            <ul class="menu-vertical">
+                <li><a href="/Graficas"><i class="fas fa-chart-line"></i> Ver Graficas</a></li>
+                <li><a href="/admin/Estadisticas"><i class="fas fa-chart-line"></i>Estadísticas</a></li>
+            </ul>
+        </li>
+        <li>
+            <a href="#"><i class="fas fa-comments"></i> Foro <i class="fas fa-caret-down"></i></a>
+            <ul class="menu-vertical">
+                <li><a href="/admin/foroAdmin"><i class="fas fa-comment-dots"></i> Ver Publicaciones</a></li>
+             
+            </ul>
+        </li>
+        <li>
+            <a href="#"><i class="fas fa-user"></i> Mi Cuenta <i class="fas fa-caret-down"></i></a>
+            <ul class="menu-vertical">
+                <li><a href="/PerfilAdmin"><i class="fas fa-id-card"></i> Perfil</a></li>
+                <li><a href="#"><i class="fas fa-cog"></i> Configuración</a></li>
+                <li><a href="/admin/cerrarSesion"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a></li>
+            </ul>
+        </li>
+    </ul>
+</nav>
+<main class="perfil-container">
+        <h2>Tu Perfil de Administrador</h2>
+        
+        <div th:if="${mensaje}" class="mensaje-exito" th:text="${mensaje}"></div>
+        <div th:if="${error}" class="mensaje-error" th:text="${error}"></div>
+
+        <div class="perfil-header">
+            <div class="foto-perfil">
+                <img th:if="${usuario != null and usuario.imagenPerfil != null}" 
+                     th:src="@{${usuario.imagenPerfil}}" 
+                     alt="Foto de perfil">
+                <img th:unless="${usuario != null and usuario.imagenPerfil != null}" 
+                     th:src="@{/imagenes/perfiles/default.jpg}"
+                     alt="Foto de perfil por defecto">
+            </div>
+            <div class="info-perfil">
+                <h3 class="nombre-usuario" th:text="${usuario != null ? usuario.nombre : 'Nombre de Usuario'}">Nombre de Usuario</h3>
+                <p class="rol-usuario">Administrador</p>
+            </div>
+        </div>
+
+        <form th:action="@{/actualizarPerfil}" method="post" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="nombre">Nombre:</label>
+                <input type="text" id="nombre" name="nombre" th:value="${usuario != null ? usuario.nombre : ''}" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="correo">Correo Electrónico:</label>
+                <input type="email" id="correo" name="correo" th:value="${usuario != null ? usuario.correo : ''}" readonly>
+                <small>El correo no se puede cambiar por razones de seguridad.</small>
+            </div>
+            
+            <div class="form-group">
+                <label for="passwordActual">Contraseña Actual:</label>
+                <input type="password" id="passwordActual" name="passwordActual">
+                <small>Ingrese su contraseña actual para realizar cambios en la contraseña.</small>
+            </div>
+            
+            <div class="form-group">
+                <label for="nuevaPassword">Nueva Contraseña (opcional):</label>
+                <input type="password" id="nuevaPassword" name="nuevaPassword">
+                <small>La contraseña debe tener al menos 8 caracteres, una letra mayúscula, una letra minúscula, un número y un carácter especial.</small>
+            </div>
+            
+            <div class="form-group">
+                <label for="numero">Número de Teléfono:</label>
+                <input type="tel" id="numero" name="numero" th:value="${usuario != null ? usuario.numero : ''}" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="imagen">Cambiar foto de perfil:</label>
+                <input type="file" id="imagen" name="imagen" accept="image/*">
+            </div>
+            
+            <button type="submit" class="btn-actualizar">Actualizar Perfil</button>
+        </form>
+    </main>
+</body>
+</html>

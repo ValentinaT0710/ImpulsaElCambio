@@ -1,0 +1,295 @@
+body {
+    background-size: 400% 400%;
+    animation: gradientAnimation 12s ease infinite;
+    font-family: 'Mitr', sans-serif;
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
+    font-family: 'Limelight', 'Literata', sans-serif;
+    background: linear-gradient(200deg, #f3f3f3, #dbacee, #db80f1);
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    overflow-x: hidden;
+    width: 100%;
+    min-width: 320px;
+}
+
+@keyframes gradientAnimation {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px;
+    background-color: white;
+    gap: 20px;
+}
+
+.logo img {
+    width: 200px;
+    max-height: 100px;
+}
+
+.IMPULSA-EL-CAMBIO {
+    font-size: 100px;
+    color: rgba(3, 183, 188, 0.9);
+    text-shadow: 0 4px 6px #03b7bc;
+    white-space: nowrap;
+    margin: 0;
+    font-family: 'Limelight', 'Literata', sans-serif;
+}
+
+.menu-horizontal {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    background-color: #8e44ad;
+    padding: 0;
+    margin: 0;
+    position: center;
+    gap: 10px;
+}
+
+.menu-horizontal>li {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.menu-horizontal>li>a {
+    display: block;
+    padding: 15px 20px;
+    color: white;
+    text-decoration: none;
+    font-family: 'Mitr', sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+}
+
+
+/* Estilos para el menú desplegable */
+
+.menu-vertical {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: #9b59b6;
+    padding: 0;
+    list-style: none;
+    min-width: 180px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.menu-horizontal>li:hover .menu-vertical {
+    display: block;
+}
+
+.menu-vertical li {
+    width: 100%;
+}
+
+.menu-vertical li a {
+    display: block;
+    padding: 12px 20px;
+    color: white;
+    text-decoration: none;
+    font-family: 'Mitr', sans-serif;
+    font-weight: 300;
+    font-size: 14px;
+}
+
+
+/* Efectos hover */
+
+.menu-horizontal>li>a:hover,
+.menu-vertical li a:hover {
+    background-color: #8e44ad;
+}
+
+
+/* Estilo para el ícono de flecha */
+
+.fas.fa-caret-down {
+    margin-left: 5px;
+}
+
+
+/* Estilos para el perfil en la parte superior */
+
+.perfil-header {
+    display: flex;
+    align-items: center;
+    background-color: #f0f0f0;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.perfil-header .foto-perfil {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-right: 20px;
+}
+
+.perfil-header .foto-perfil img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.perfil-header .info-perfil {
+    flex-grow: 1;
+}
+
+.perfil-header .nombre-usuario {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    margin: 0;
+}
+
+.perfil-header .rol-usuario {
+    font-size: 16px;
+    color: #666;
+    margin: 5px 0 0;
+}
+
+
+/* Ajustes adicionales para el diseño existente */
+
+.perfil-container {
+    padding-top: 20px;
+}
+
+.perfil-container {
+    max-width: 800px;
+    margin: 3rem auto;
+    padding: 2.5rem;
+    background-color: white;
+    border-radius: 15px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.perfil-container h2 {
+    color: #03b7bc;
+    font-size: 2.8rem;
+    text-align: center;
+    margin-bottom: 2.5rem;
+    text-shadow: 1px 1px 2px rgba(3, 183, 188, 0.2);
+}
+
+.mensaje-exito,
+.mensaje-error {
+    padding: 15px;
+    margin-bottom: 25px;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+}
+
+.mensaje-exito {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.mensaje-error {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.form-group {
+    margin-bottom: 2rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.8rem;
+    color: #333;
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 0.8rem;
+    border: 2px solid #c76dd7;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #03b7bc;
+}
+
+.form-group small {
+    color: #666;
+    font-style: italic;
+    font-size: 0.9rem;
+}
+
+.btn-actualizar,
+.btn-recuperar {
+    background-color: #03b7bc;
+    color: white;
+    padding: 0.9rem 1.8rem;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(3, 183, 188, 0.2);
+}
+
+.btn-actualizar:hover,
+.btn-recuperar:hover {
+    background-color: #028e92;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 8px rgba(3, 183, 188, 0.3);
+}
+
+.recuperar-password {
+    margin-top: 3rem;
+    padding-top: 2.5rem;
+    border-top: 2px solid #c76dd7;
+}
+
+.recuperar-password h3 {
+    color: #c76dd7;
+    margin-bottom: 1.5rem;
+    font-size: 2rem;
+    text-align: center;
+}
+
+footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 1.2rem;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    font-size: 0.9rem;
+}

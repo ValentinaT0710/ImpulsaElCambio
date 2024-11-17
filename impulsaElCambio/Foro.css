@@ -1,0 +1,429 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Lusitana, "Literata", sans-serif;
+  background: linear-gradient(135deg, #fff, #c8a2c8 100%);
+  overflow-x: hidden;
+  font-size: 24px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 5px;
+  background-color: white;
+  gap: 20px;
+}
+
+.logo img {
+  width: 400px;
+  max-height: 300px;
+  margin-right: 10px;
+}
+
+.IMPULSA-EL-CAMBIO {
+  font-size: 85px;
+  color: #03b7bce6;
+  -webkit-text-stroke: 0.5px #ffffff;
+  text-shadow: 0 4px 6px #03b7bce6;
+  margin: 5px 0;
+  font-family: "Limelight", "Literata", sans-serif;
+  margin: 0;
+  font-weight: normal;
+}
+
+/* Estilos del menú */
+.main-nav {
+  width: 100%;
+  background-color: #cb73fa;
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+.menu-horizontal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  flex-wrap: wrap;
+}
+
+.menu-horizontal > li {
+  position: relative;
+  margin: 0;
+  padding: 0;
+}
+
+.menu-horizontal > li > a {
+  display: flex;
+  align-items: center;
+  padding: 16px 32px;
+  color: #000;
+  text-decoration: none;
+  font-size: 24px;
+  font-weight: bold;
+  font-family: "Literata", serif;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  display: block;
+  border: none;
+}
+
+.menu-horizontal > li > a:hover {
+  background-color: #45b5c9;
+  color: white;
+  transform: scale(1.05);
+}
+
+.menu-horizontal > li > a > i {
+  margin-right: 10px;
+}
+
+/* Estilos del botón móvil */
+.menu-mobile {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+}
+
+.menu-mobile .bar {
+  display: block;
+  width: 25px;
+  height: 3px;
+  margin: 5px auto;
+  background-color: #03b7bce6;
+  transition: all 0.3s ease-in-out;
+}
+
+/* Contenedor de Comentarios - Actualizado */
+
+.comentarios-container {
+  max-width: 90%;
+  margin: 2rem auto;
+  padding: 1rem;
+  border-radius: 20px;
+  overflow-y: auto;
+  background: transparent;
+  border: none;
+}
+
+.comentario-container {
+  background: white;
+  border-radius: 12px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.comentario-contenido {
+  font-size: 1rem;
+  margin: 1rem 0;
+  line-height: 1.5;
+  color: #000000;
+}
+
+.btn-publicar,
+.btn-enviar {
+  display: inline-block;
+  background: linear-gradient(to right, #6b2491 17%, #1cbec3 86%);
+  padding: 15px 50px;
+  border-radius: 25px;
+  cursor: pointer;
+  text-decoration: none;
+  font-family: "Mitr", serif;
+  font-weight: bold;
+  font-size: 18px;
+  border: none;
+  text-transform: uppercase;
+}
+
+.btn-publicar:hover,
+.btn-enviar:hover {
+  transform: scale(1.05);
+}
+
+.usuario-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.info-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.fecha {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.comentario-acciones {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+  border-top: 1px solid #eee;
+  padding-top: 1rem;
+}
+
+.btn-me-encanta,
+.btn-responder {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: #666;
+  transition: all 0.2s ease;
+}
+
+.btn-me-encanta:hover,
+.btn-responder:hover {
+  color: #333;
+  background: #f5f5f5;
+  border-radius: 4px;
+}
+
+.fa-heart.activo {
+  color: #ff4d4d;
+}
+
+.formulario-respuesta {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+
+.texto-respuesta {
+  width: 100%;
+  min-height: 80px;
+  padding: 0.8rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+  resize: vertical;
+}
+
+.respuestas-wrapper {
+  margin-top: 1rem;
+  margin-left: 2rem;
+}
+
+.respuestas {
+  margin-top: 0.5rem;
+}
+
+.respuesta {
+  background: #f8f9fa;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-top: 0.5rem;
+  border: 1px solid #eee;
+}
+
+.btn-toggle-respuestas {
+  background: none;
+  border: none;
+  color: #03b7bc;
+  cursor: pointer;
+  padding: 0.5rem;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.btn-toggle-respuestas:hover {
+  text-decoration: underline;
+}
+
+/* Foro Editable */
+
+.foroEditable {
+  max-width: 80%;
+  width: 1500px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  padding: 1.5rem;
+  margin: 2rem auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.usuario-comentario {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  width: 100%;
+  justify-content: center;
+}
+
+/* Estilo para la imagen de perfil por defecto */
+
+.usuario-comentario img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: #f0f2f5;
+  border: 2px solid #03b7bc;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  object-fit: cover;
+}
+
+.usuario-comentario .nombre-usuario {
+  font-weight: 600;
+  color: #2c3e50;
+  font-size: 1.1rem;
+  margin-top: 0.5rem;
+}
+
+.comentario-input-container {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+#nuevoComentario {
+  width: 100%;
+  min-height: 100px;
+  padding: 1rem;
+  margin: 1rem auto;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  resize: none;
+  font-family: inherit;
+  font-size: 1rem;
+  box-sizing: border-box;
+  overflow-y: auto;
+  max-width: 100%;
+}
+
+#nuevoComentario:focus {
+  outline: none;
+  border-color: #03b7bc;
+  background-color: white;
+  box-shadow: 0 0 0 2px rgba(3, 183, 188, 0.1);
+}
+
+#nuevoComentario::placeholder {
+  color: #999;
+  font-size: 0.95rem;
+}
+
+/* RESPONSIVIDAD - TELÉFONOS Y TABLETAS */
+@media (max-width: 768px) {
+  body {
+    background-color: #c8a2c8;
+  }
+
+  .menu-mobile {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 15px;
+    z-index: 1001;
+  }
+
+  .menu-mobile .bar {
+    display: block;
+    width: 25px;
+    height: 3px;
+    margin: 5px auto;
+    background-color: #8e44ad;
+    transition: all 0.3s ease;
+  }
+
+  .menu-mobile.active .bar:nth-child(1) {
+    transform: translateY(8px) rotate(45deg);
+  }
+
+  .menu-mobile.active .bar:nth-child(2) {
+    opacity: 0;
+  }
+
+  .menu-mobile.active .bar:nth-child(3) {
+    transform: translateY(-8px) rotate(-45deg);
+  }
+
+  .header {
+    flex-direction: column;
+    padding: 1rem;
+  }
+
+  .IMPULSA-EL-CAMBIO {
+    font-size: 40px;
+  }
+
+  .logo img {
+    width: 80%;
+    max-height: 200px;
+  }
+
+  /* Contenedor de comentarios */
+  .comentarios-container {
+    max-width: 100%;
+    padding: 1rem;
+    margin: 1rem auto;
+    border-radius: 10px;
+    overflow-x: hidden;
+  }
+
+  .comentario-container {
+    padding: 1rem;
+    margin: 1rem 0;
+    max-width: 100%;
+  }
+
+  .comentario-contenido {
+    font-size: 14px;
+    line-height: 1.5;
+    background-color: #f8f9fa;
+  }
+
+  .usuario-info {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  /* Inputs y botones */
+  #nuevoComentario {
+    min-height: 80px;
+    padding: 1rem;
+    font-size: 14px;
+  }
+
+  .btn-publicar,
+  .btn-enviar {
+    width: 100%;
+    padding: 0.8rem;
+    font-size: 14px;
+    margin: 0.5rem 0;
+  }
+
+  /* Foro editable */
+  .foroEditable {
+    width: 100%;
+    padding: 1rem;
+    margin: 1rem auto;
+  }
+
+  .usuario-comentario img {
+    width: 40px;
+    height: 40px;
+  }
+
+  .usuario-comentario .nombre-usuario {
+    font-size: 14px;
+  }
+}

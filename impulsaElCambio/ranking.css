@@ -1,0 +1,153 @@
+body {
+    margin: 0;
+    font-family: 'Limelight', 'Literata', sans-serif;
+    background-color: white;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px;
+    background-color: white;
+    gap: 20px;
+}
+
+.logo img {
+    width: 200px;
+    max-height: 100px;
+}
+
+.IMPULSA-EL-CAMBIO {
+    font-size: 100px;
+    color: rgba(3, 183, 188, 0.9);
+    text-shadow: 0 4px 6px #03b7bc;
+    white-space: nowrap;
+    margin: 0;
+    font-family: 'Limelight', 'Literata', sans-serif;
+}
+
+.navbar {
+    background-color: #c76dd7;
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+    padding: 8px 0;
+}
+
+.navbar ul {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    padding: 0;
+    margin: 0;
+}
+
+.navbar ul li {
+    margin: 0 20px;
+}
+
+.navbar ul li a {
+    text-decoration: none;
+    color: #000;
+    font-size: 24px;
+    font-weight: bold;
+    font-family: 'Literata', serif;
+    transition: color 0.3s;
+}
+
+.navbar ul li a:hover {
+    color: #03b7bc;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+}
+
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background-color: white;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-top: 20px;
+}
+
+th, td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: #03b7bc;
+    color: white;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+th:first-child {
+    text-align: left;
+}
+
+td:first-child {
+    text-align: left;
+    font-weight: bold;
+}
+
+th:last-child, td:last-child {
+    border-right: none;
+}
+
+tr:last-child td {
+    border-bottom: none;
+}
+
+tr:nth-child(even) {
+    background-color: #f8f8f8;
+}
+
+tr:hover {
+    background-color: #e8f4f4;
+}
+
+.total-row {
+    font-weight: bold;
+    background-color: #e0e0e0;
+}
+
+.insignia {
+    display: inline-block;
+    margin-right: 5px;
+    padding: 3px 6px;
+    background-color: #c76dd7;
+    color: white;
+    border-radius: 12px;
+    font-size: 0.8em;
+}
+
+.position {
+    font-weight: bold;
+    color: #03b7bc;
+}
+
+.insignias-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    justify-content: flex-start;
+}
+
+.insignia-img {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+}
